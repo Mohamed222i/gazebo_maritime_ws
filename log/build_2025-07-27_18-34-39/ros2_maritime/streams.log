@@ -1,0 +1,40 @@
+[0.499s] Invoking command in '/home/pc/gazebo_maritime_ws/src/ros2_maritime': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pc/gazebo_maritime_ws/build/ros2_maritime/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros2_maritime build --build-base /home/pc/gazebo_maritime_ws/build/ros2_maritime/build install --record /home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log --single-version-externally-managed install_data
+[0.643s] running egg_info
+[0.643s] creating ../../build/ros2_maritime/ros2_maritime.egg-info
+[0.653s] writing ../../build/ros2_maritime/ros2_maritime.egg-info/PKG-INFO
+[0.653s] writing dependency_links to ../../build/ros2_maritime/ros2_maritime.egg-info/dependency_links.txt
+[0.653s] writing requirements to ../../build/ros2_maritime/ros2_maritime.egg-info/requires.txt
+[0.653s] writing top-level names to ../../build/ros2_maritime/ros2_maritime.egg-info/top_level.txt
+[0.653s] writing manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'
+[0.672s] reading manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'
+[0.673s] writing manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'
+[0.673s] running build
+[0.673s] running build_py
+[0.673s] creating /home/pc/gazebo_maritime_ws/build/ros2_maritime/build
+[0.673s] creating /home/pc/gazebo_maritime_ws/build/ros2_maritime/build/lib
+[0.673s] creating /home/pc/gazebo_maritime_ws/build/ros2_maritime/build/lib/ros2_maritime
+[0.673s] copying ros2_maritime/__init__.py -> /home/pc/gazebo_maritime_ws/build/ros2_maritime/build/lib/ros2_maritime
+[0.673s] running install
+[0.677s] running install_lib
+[0.687s] creating /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime
+[0.687s] copying /home/pc/gazebo_maritime_ws/build/ros2_maritime/build/lib/ros2_maritime/__init__.py -> /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime
+[0.687s] byte-compiling /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__init__.py to __init__.cpython-312.pyc
+[0.687s] running install_data
+[0.687s] creating /home/pc/gazebo_maritime_ws/install/share/ament_index
+[0.687s] creating /home/pc/gazebo_maritime_ws/install/share/ament_index/resource_index
+[0.687s] creating /home/pc/gazebo_maritime_ws/install/share/ament_index/resource_index/packages
+[0.687s] copying resource/ros2_maritime -> /home/pc/gazebo_maritime_ws/install/share/ament_index/resource_index/packages
+[0.688s] copying package.xml -> /home/pc/gazebo_maritime_ws/install/share/ros2_maritime
+[0.688s] creating /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/launch
+[0.688s] copying launch/display.launch.py -> /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/launch
+[0.688s] creating /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/urdf
+[0.688s] creating /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/rviz
+[0.688s] creating /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/gz
+[0.688s] creating /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/meshes
+[0.688s] creating /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/config
+[0.688s] copying config/bridge_config.yaml -> /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/config
+[0.688s] running install_egg_info
+[0.698s] Copying ../../build/ros2_maritime/ros2_maritime.egg-info to /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info
+[0.699s] running install_scripts
+[0.769s] writing list of installed files to '/home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log'
+[0.786s] Invoked command in '/home/pc/gazebo_maritime_ws/src/ros2_maritime' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pc/gazebo_maritime_ws/build/ros2_maritime/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros2_maritime build --build-base /home/pc/gazebo_maritime_ws/build/ros2_maritime/build install --record /home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log --single-version-externally-managed install_data

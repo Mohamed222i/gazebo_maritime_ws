@@ -1,0 +1,20 @@
+[0.466s] Invoking command in '/home/pc/gazebo_maritime_ws/src/ros2_maritime': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pc/gazebo_maritime_ws/build/ros2_maritime/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros2_maritime build --build-base /home/pc/gazebo_maritime_ws/build/ros2_maritime/build install --record /home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log --single-version-externally-managed install_data
+[0.615s] running egg_info
+[0.625s] writing ../../build/ros2_maritime/ros2_maritime.egg-info/PKG-INFO
+[0.625s] writing dependency_links to ../../build/ros2_maritime/ros2_maritime.egg-info/dependency_links.txt
+[0.625s] writing requirements to ../../build/ros2_maritime/ros2_maritime.egg-info/requires.txt
+[0.625s] writing top-level names to ../../build/ros2_maritime/ros2_maritime.egg-info/top_level.txt
+[0.644s] reading manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'
+[0.645s] writing manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'
+[0.645s] running build
+[0.645s] running build_py
+[0.645s] running install
+[0.649s] running install_lib
+[0.659s] running install_data
+[0.659s] copying launch/display.launch.py -> /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/launch
+[0.659s] running install_egg_info
+[0.669s] removing '/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info' (and everything under it)
+[0.670s] Copying ../../build/ros2_maritime/ros2_maritime.egg-info to /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info
+[0.670s] running install_scripts
+[0.742s] writing list of installed files to '/home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log'
+[0.758s] Invoked command in '/home/pc/gazebo_maritime_ws/src/ros2_maritime' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pc/gazebo_maritime_ws/build/ros2_maritime/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros2_maritime build --build-base /home/pc/gazebo_maritime_ws/build/ros2_maritime/build install --record /home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log --single-version-externally-managed install_data

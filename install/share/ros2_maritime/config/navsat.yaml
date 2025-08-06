@@ -1,0 +1,24 @@
+navsat_transform_node:
+  ros__parameters:
+    frequency: 10.0  # Match GPS update rate (1-10Hz typical)
+    
+    # Coordinate System Settings
+    magnetic_declination_radians: 0.020  # Adjust for your location (Sydney: 11.5° ≈ 0.2 rad)
+    yaw_offset: 0.0  # Add if GPS/IMU are misaligned
+    zero_altitude: true  # Set first GPS altitude as zero
+    
+    # Frame Configuration
+    world_frame: "map"  # Must match EKF's world_frame
+    odom_frame: "odom"
+    base_link_frame: "base_link"
+    
+    # GPS Processing
+    delay: 0.2  # Compensate for GPS latency (seconds)
+    use_odometry_yaw: true  # Use EKF's yaw (more accurate than GPS course)
+    broadcast_utm_transform: false
+    publish_filtered_gps: true
+    
+    # Covariance Overrides (since Gazebo provides zeros)
+    gps_pose_covariance: [9.0, 0.0, 0.0,
+                          0.0, 9.0, 0.0,
+                          0.0, 0.0, 25.0]  # [x, y, z] variances (m²)
