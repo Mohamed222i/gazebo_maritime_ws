@@ -68,8 +68,8 @@ def generate_launch_description():
                 {'use_control': False},
                 {'odom0': '/odometry/gps'},
                 {'imu0': '/imu'},
-                {'imu1': '/Magnetometer'},
-                {'pose0': '/alimeter'},
+                {'imu1': '/magnetometer'},
+                {'pose0': '/Altimeter'},
 
                 {'imu0_differential': False},
                 {'imu0_remove_gravitational_acceleration': True},

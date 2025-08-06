@@ -16,13 +16,13 @@
   gz_type_name: "gz.msgs.NavSat"
   direction: "GZ_TO_ROS"
 
-- ros_topic_name: "/Magnetometer"
+- ros_topic_name: "/magnetometer"
   gz_topic_name: "/Magnetometer"
   ros_type_name: "sensor_msgs/msg/MagneticField"
   gz_type_name: "gz.msgs.Magnetometer"
   direction: "GZ_TO_ROS"
 
-- ros_topic_name: "/altimeter"
+- ros_topic_name: "/Altimeter"
   gz_topic_name: "/altimeter"
   ros_type_name: "ros_gz_interfaces/msg/Altimeter"
   gz_type_name: "gz.msgs.Altimeter"

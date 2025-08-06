@@ -1,6 +1,6 @@
 navsat_transform_node:
   ros__parameters:
-    frequency: 10.0  # Match GPS update rate (1-10Hz typical)
+    frequency: 30.0  # Match GPS update rate (1-10Hz typical)
     
     # Coordinate System Settings
     magnetic_declination_radians: 0.020  # Adjust for your location (Sydney: 11.5° ≈ 0.2 rad)
