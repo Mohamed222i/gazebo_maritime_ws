@@ -17,6 +17,7 @@ ros2 launch ros2_maritime display.launch.py
 This repository contains a Gazebo simulation environment for the WAM-V vessel. You can control the vessel’s propellers by publishing thrust commands to specific Gazebo topics.
 
 ---
+🛠️ Note: This project is currently under development to implement an Extended Kalman Filter (EKF) for sensor fusion and state estimation.
 
 ## 🚤 Starting the Simulation and Controlling the Propellers
 
