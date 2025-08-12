@@ -27,6 +27,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'altimeter_converter = ros2_maritime.altimeter_converter:main',
+            'magnetometer_converter = ros2_maritime.magnetometer_converter:main'
         ],
     },
 )

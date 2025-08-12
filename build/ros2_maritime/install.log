@@ -1,5 +1,9 @@
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/altimeter_converter.py
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__init__.py
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/magnetometer_converter.py
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/altimeter_converter.cpython-312.pyc
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/__init__.cpython-312.pyc
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/magnetometer_converter.cpython-312.pyc
 /home/pc/gazebo_maritime_ws/install/share/ament_index/resource_index/packages/ros2_maritime
 /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/package.xml
 /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/launch/display.launch.py
@@ -15,3 +19,6 @@
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info/requires.txt
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info/zip-safe
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info/PKG-INFO
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info/entry_points.txt
+/home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/altimeter_converter
+/home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/magnetometer_converter

@@ -58,7 +58,7 @@ def generate_launch_description():
             name='ekf_filter',
             output='screen',
             parameters=[
-                {'use_sim_time': False},
+                {'use_sim_time': True},
                 {'frequency': 30.0},
                 {'sensor_timeout': 2.0},
                 {'two_d_mode': False},     # ENABLE THESE CRITICAL SETTINGS
@@ -66,10 +66,11 @@ def generate_launch_description():
                 {'publish_transform': True},
                 {'print_diagnostics': True},
                 {'use_control': False},
+                
                 {'odom0': '/odometry/gps'},
                 {'imu0': '/imu'},
-                {'imu1': '/magnetometer'},
-                {'pose0': '/Altimeter'},
+                {'imu1': '/magnetometer_imu'},
+                {'pose0': '/altimeter_pose'},
 
                 {'imu0_differential': False},
                 {'imu0_remove_gravitational_acceleration': True},
@@ -105,7 +106,7 @@ def generate_launch_description():
                 ]},                
                 {'imu0_config': [
                     False, False, False,   # Position (x,y,z) - unused
-                    True,  True,  True,    # Roll, Pitch, Yaw (accel/mag primary)
+                    True,  True,  False,    # Roll, Pitch, Yaw (accel/mag primary)
                     False, False, False,   # Velocity (x,y,z) - unused
                     True,  True,  True,    # Angular velocity (x,y,z) - secondary for orientation
                     True,  True,  True     # Acceleration (x,y,z) - secondary for velocity
@@ -147,17 +148,8 @@ def generate_launch_description():
                                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
                                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1]}
-            ],
-            remappings=[
-                ('/gps/fix', '/navsat')
             ]
         ),
-
-
-
-
-
-
 
 
         # RViz
@@ -167,6 +159,17 @@ def generate_launch_description():
             name="rviz2",
             output="screen",
             parameters=[{"use_sim_time": True}]
+        ),
+
+        Node(
+            package='ros2_maritime',
+            executable='altimeter_converter',
+            name='altimeter_converter'
+        ),
+        Node(
+            package='ros2_maritime',
+            executable='magnetometer_converter',
+            name='magnetometer_converter'
         ),
 
         # ROS-Gazebo Bridge
