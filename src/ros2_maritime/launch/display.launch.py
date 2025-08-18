@@ -78,6 +78,20 @@ def generate_launch_description():
                 {'imu0_angular_velocity_covariance': 0.001},
                 {'imu0_linear_acceleration_covariance': 0.01},
 
+                {'imu0_orientation_covariance': [0.01, 0, 0,
+                                               0, 0.01, 0,
+                                               0, 0, 0.02]},
+                {'imu0_angular_velocity_covariance': [0.001, 0, 0,
+                                                    0, 0.001, 0,
+                                                    0, 0, 0.002]},
+                {'imu0_linear_acceleration_covariance': [0.01, 0, 0,
+                                                       0, 0.01, 0,
+                                                       0, 0, 0.02]},
+
+
+
+
+
                 {'imu1_differential': False},
                 {'imu1_orientation_covariance': 0.05,},
 
@@ -131,8 +145,8 @@ def generate_launch_description():
                 {'base_link_frame': 'base_link'},
                 {'world_frame': 'map'},    ## map or odom ????
                 {'qos_overrides./imu.reliability': 'reliable'},
-                {'qos_overrides./navsat.reliability': 'reliable'},
-                {'qos_overrides./demo/odom.reliability': 'reliable'},
+                {'qos_overrides./magnetometer_imu.reliability': 'reliable'},
+                {'qos_overrides./altimeter_pose.reliability': 'reliable'},
                 {'process_noise_covariance': [0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                                    0.0, 0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                                    0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -170,6 +184,19 @@ def generate_launch_description():
             package='ros2_maritime',
             executable='magnetometer_converter',
             name='magnetometer_converter'
+        ),
+
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0',
+                       'base_link', 'wam-v/base_link']
+        ),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0',
+                       'base_link', 'wam-v/base_link/imu_sensor']
         ),
 
         # ROS-Gazebo Bridge
