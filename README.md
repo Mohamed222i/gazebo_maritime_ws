@@ -229,6 +229,24 @@ magnetic_field_covariance:
 - 0.0
 ```
 
+
+
+
+
+
+
+---
+# Sensor Fusion Logic
+Primary/secondary assignments for each state component within the EKF:
+- (x, y): GPS primary, accelerometer secondary.
+- z: GPS primary, barometer secondary.
+- (vx, vy): GPS Doppler primary, accelerometer secondary.
+- vz: accelerometer primary, barometer secondary.
+- Roll/Pitch: accelerometer primary, gyroscope secondary.
+- Yaw: magnetometer primary, gyroscope secondary.
+
+
+
 ---
 # 🚀 Simulation Python du contrôle SMC pour WAM-V
 
