@@ -68,7 +68,7 @@ Primary/secondary assignments for each state component within the EKF:
 
 
 
-### �� Sensor Fusion Overview for EKF (ROS 2)
+### Sensor Fusion Overview
 
 | **Sensor**       | **Topic**             | **Type**                                | **Frame ID**                        | **Rate (Hz)** | **Data Used in EKF**               | **Current Covariance Status**                       | **Corrections Needed**                                      |
 |------------------|------------------------|------------------------------------------|-------------------------------------|---------------|-------------------------------------|------------------------------------------------------|--------------------------------------------------------------|
