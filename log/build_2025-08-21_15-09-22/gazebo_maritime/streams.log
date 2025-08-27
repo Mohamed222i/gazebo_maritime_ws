@@ -1,0 +1,48 @@
+[0.021s] Invoking command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/pc/gazebo_maritime_ws/build/gazebo_maritime -- -j16 -l16
+[0.166s] [ 12%] [32mBuilding CXX object CMakeFiles/Waves.dir/src/Wavefield.cc.o[0m
+[4.468s] [ 25%] [32m[1mLinking CXX shared library libWaves.so[0m
+[4.755s] [ 25%] Built target Waves
+[4.800s] [ 37%] [32mBuilding CXX object CMakeFiles/PublisherPlugin.dir/src/PublisherPlugin.cc.o[0m
+[4.802s] [ 50%] [32mBuilding CXX object CMakeFiles/Surface.dir/src/Surface.cc.o[0m
+[4.804s] [ 62%] [32mBuilding CXX object CMakeFiles/WaveVisual.dir/src/WaveVisual.cc.o[0m
+[9.580s] [ 75%] [32m[1mLinking CXX shared library libPublisherPlugin.so[0m
+[9.884s] [ 75%] Built target PublisherPlugin
+[10.741s] [ 87%] [32m[1mLinking CXX shared library libSurface.so[0m
+[11.081s] [ 87%] Built target Surface
+[12.684s] [100%] [32m[1mLinking CXX shared library libWaveVisual.so[0m
+[12.972s] [100%] Built target WaveVisual
+[12.989s] Invoked command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/pc/gazebo_maritime_ws/build/gazebo_maritime -- -j16 -l16
+[13.006s] Invoking command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/pc/gazebo_maritime_ws/build/gazebo_maritime
+[13.019s] -- Install configuration: ""
+[13.020s] -- Installing: /home/pc/gazebo_maritime_ws/install/lib/libWaves.so
+[13.021s] -- Set non-toolchain portion of runtime path of "/home/pc/gazebo_maritime_ws/install/lib/libWaves.so" to ""
+[13.021s] -- Installing: /home/pc/gazebo_maritime_ws/install/lib/libPublisherPlugin.so
+[13.022s] -- Set non-toolchain portion of runtime path of "/home/pc/gazebo_maritime_ws/install/lib/libPublisherPlugin.so" to ""
+[13.022s] -- Installing: /home/pc/gazebo_maritime_ws/install/lib/libSurface.so
+[13.024s] -- Set non-toolchain portion of runtime path of "/home/pc/gazebo_maritime_ws/install/lib/libSurface.so" to ""
+[13.024s] -- Installing: /home/pc/gazebo_maritime_ws/install/lib/libWaveVisual.so
+[13.027s] -- Set non-toolchain portion of runtime path of "/home/pc/gazebo_maritime_ws/install/lib/libWaveVisual.so" to ""
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/programs
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/programs/GerstnerWaves_fs_330.glsl
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/programs/GerstnerWaves_vs_330.glsl
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/textures
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/textures/wave_normals.dds
+[13.027s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/textures/skybox_lowres.dds
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/model.config
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/model.sdf
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/meshes
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/meshes/waterlow.dae
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/model.config
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/model.sdf
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes/propeller.dae
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes/WamV.png
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes/WAM-V-Base.dae
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes/engine.dae
+[13.028s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/worlds
+[13.029s] -- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/worlds/sydney_regatta.sdf
+[13.030s] Invoked command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/pc/gazebo_maritime_ws/build/gazebo_maritime

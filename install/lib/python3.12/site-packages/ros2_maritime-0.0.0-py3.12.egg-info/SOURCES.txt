@@ -9,12 +9,15 @@ setup.py
 ../../build/ros2_maritime/ros2_maritime.egg-info/top_level.txt
 ../../build/ros2_maritime/ros2_maritime.egg-info/zip-safe
 config/bridge_config.yaml
+config/ekf_filter.yaml
 config/navsat.yaml
 launch/display.launch.py
 resource/ros2_maritime
 ros2_maritime/__init__.py
 ros2_maritime/altimeter_converter.py
+ros2_maritime/imu_covariance.py
 ros2_maritime/magnetometer_converter.py
+ros2_maritime/usv_breadcrumb.py
 test/test_copyright.py
 test/test_flake8.py
 test/test_pep257.py

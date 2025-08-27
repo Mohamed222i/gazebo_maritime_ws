@@ -9,7 +9,7 @@ class AltimeterConverter(Node):
         super().__init__('altimeter_converter')
         self.pub = self.create_publisher(
             PoseWithCovarianceStamped, 
-            '/altimeter_pose', 
+            '/sensor/altimeter', 
             10
         )
         self.sub = self.create_subscription(

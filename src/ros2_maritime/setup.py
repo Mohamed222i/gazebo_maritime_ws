@@ -28,7 +28,9 @@ setup(
     entry_points={
         'console_scripts': [
             'altimeter_converter = ros2_maritime.altimeter_converter:main',
-            'magnetometer_converter = ros2_maritime.magnetometer_converter:main'
+            'imu_covariance = ros2_maritime.imu_covariance:main',
+            'magnetometer_converter = ros2_maritime.magnetometer_converter:main',
+            'usv_breadcrumb = ros2_maritime.usv_breadcrumb:main'
         ],
     },
 )

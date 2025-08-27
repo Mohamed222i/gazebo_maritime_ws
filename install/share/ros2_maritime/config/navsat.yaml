@@ -9,13 +9,17 @@ navsat_transform_node:
     zero_altitude: true  # Set first GPS altitude as zero
     
     # Frame Configuration
-    world_frame: "map"  # Must match EKF's world_frame
+    world_frame: "odom"  # Must match EKF's world_frame
     odom_frame: "odom"
     base_link_frame: "base_link"
-    
+    child_frame_id: "base_link"
+    publish_tf: True
+    imu_frame: wam-v/base_link/imu_sensor
+    gps_frame: wam-v/base_link/navsat_sensor
+
     # GPS Processing
     delay: 0.2  # Compensate for GPS latency (seconds)
-    use_odometry_yaw: false  # Use EKF's yaw (more accurate than GPS course)
+    use_odometry_yaw: true  # Use EKF's yaw (more accurate than GPS course)
     broadcast_utm_transform: true
     publish_filtered_gps: true
     

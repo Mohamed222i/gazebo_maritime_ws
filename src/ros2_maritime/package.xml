@@ -3,16 +3,34 @@
 <package format="3">
   <name>ros2_maritime</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>ROS 2 maritime simulation package with Gazebo, robot_localization, and sensor converters.</description>
   <maintainer email="farouk9519@gmail.com">pc</maintainer>
   <license>TODO: License declaration</license>
-  
-  <exec_depend>robot_localization</exec_depend>
 
+  <!-- Runtime dependencies -->
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+
+  <!-- Test dependencies -->
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
+
+
+
 
   <export>
     <build_type>ament_python</build_type>

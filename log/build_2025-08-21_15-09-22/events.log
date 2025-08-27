@@ -1,0 +1,210 @@
+[0.000000] (-) TimerEvent: {}
+[0.000347] (gazebo_maritime) JobQueued: {'identifier': 'gazebo_maritime', 'dependencies': OrderedDict()}
+[0.000688] (ros2_maritime) JobQueued: {'identifier': 'ros2_maritime', 'dependencies': OrderedDict()}
+[0.000728] (gazebo_maritime) JobStarted: {'identifier': 'gazebo_maritime'}
+[0.008984] (ros2_maritime) JobStarted: {'identifier': 'ros2_maritime'}
+[0.017593] (gazebo_maritime) JobProgress: {'identifier': 'gazebo_maritime', 'progress': 'cmake'}
+[0.019488] (gazebo_maritime) JobProgress: {'identifier': 'gazebo_maritime', 'progress': 'build'}
+[0.019579] (gazebo_maritime) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/pc/gazebo_maritime_ws/build/gazebo_maritime', '--', '-j16', '-l16'], 'cwd': '/home/pc/gazebo_maritime_ws/build/gazebo_maritime', 'env': OrderedDict({'GZ_SIM_SYSTEM_PLUGIN_PATH': ':/home/pc/gazebo_maritime_ws/install/lib:/home/pc/gazebo_maritime_ws/install/lib', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'GZ_SIM_RESOURCE_PATH': '/home/pc/vrx_ws/src/vrx/vrx_gazebo/models:/home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models', 'USER': 'pc', 'GZ_CONFIG_PATH': '/usr/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib:/usr/local/lib:/home/pc/gazebo_maritime_ws/install/lib:/usr/local/lib:/home/pc/gazebo_maritime_ws/install/lib', 'HOME': '/home/pc', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '2343', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=9bdf152d8385d92ace3d579168a71c51', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/pc/ros2_ws/install', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'pc', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'pc', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/pc-MINIPC-PN64:@/tmp/.ICE-unix/2343,unix/pc-MINIPC-PN64:/tmp/.ICE-unix/2343', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/093d0ff8_8f3e_42fe_83eb_3acdab4e713c', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.KHTWB3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.123', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/pc/ros2_ws/install/usv_description:/home/pc/ros2_ws/install/try_description:/home/pc/ros2_ws/install/urdf_tutorial:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'IGN_GAZEBO_RESOURCE_PATH': '/opt/ros/jazzy/share', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/pc/gazebo_maritime_ws/build/gazebo_maritime', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=9bdf152d8385d92ace3d579168a71c51', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/pc/ros2_ws/install/usv_description/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages:/usr/lib/python3/dist-packages:/usr/lib/python3/dist-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/home/pc/ros2_ws/install/try_description:/home/pc/ros2_ws/install/urdf_tutorial:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}), 'shell': False}
+[0.099856] (-) TimerEvent: {}
+[0.166492] (gazebo_maritime) StdoutLine: {'line': b'[ 12%] \x1b[32mBuilding CXX object CMakeFiles/Waves.dir/src/Wavefield.cc.o\x1b[0m\n'}
+[0.200009] (-) TimerEvent: {}
+[0.300456] (-) TimerEvent: {}
+[0.400766] (-) TimerEvent: {}
+[0.501109] (-) TimerEvent: {}
+[0.601543] (-) TimerEvent: {}
+[0.701983] (-) TimerEvent: {}
+[0.802444] (-) TimerEvent: {}
+[0.902830] (-) TimerEvent: {}
+[1.003264] (-) TimerEvent: {}
+[1.103722] (-) TimerEvent: {}
+[1.204180] (-) TimerEvent: {}
+[1.224014] (ros2_maritime) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/ros2_maritime', 'build', '--build-base', '/home/pc/gazebo_maritime_ws/build/ros2_maritime/build', 'install', '--record', '/home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/pc/gazebo_maritime_ws/src/ros2_maritime', 'env': {'GZ_SIM_SYSTEM_PLUGIN_PATH': ':/home/pc/gazebo_maritime_ws/install/lib:/home/pc/gazebo_maritime_ws/install/lib', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'GZ_SIM_RESOURCE_PATH': '/home/pc/vrx_ws/src/vrx/vrx_gazebo/models:/home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models', 'USER': 'pc', 'GZ_CONFIG_PATH': '/usr/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib:/usr/local/lib:/home/pc/gazebo_maritime_ws/install/lib:/usr/local/lib:/home/pc/gazebo_maritime_ws/install/lib', 'HOME': '/home/pc', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '2343', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=9bdf152d8385d92ace3d579168a71c51', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/pc/ros2_ws/install', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'pc', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'pc', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/pc-MINIPC-PN64:@/tmp/.ICE-unix/2343,unix/pc-MINIPC-PN64:/tmp/.ICE-unix/2343', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/093d0ff8_8f3e_42fe_83eb_3acdab4e713c', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.KHTWB3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.123', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/pc/ros2_ws/install/usv_description:/home/pc/ros2_ws/install/try_description:/home/pc/ros2_ws/install/urdf_tutorial:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'IGN_GAZEBO_RESOURCE_PATH': '/opt/ros/jazzy/share', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/pc/gazebo_maritime_ws/build/ros2_maritime', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=9bdf152d8385d92ace3d579168a71c51', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/pc/gazebo_maritime_ws/build/ros2_maritime/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages:/home/pc/ros2_ws/install/usv_description/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages:/usr/lib/python3/dist-packages:/usr/lib/python3/dist-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/home/pc/ros2_ws/install/try_description:/home/pc/ros2_ws/install/urdf_tutorial:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}, 'shell': False}
+[1.304434] (-) TimerEvent: {}
+[1.404882] (-) TimerEvent: {}
+[1.505321] (-) TimerEvent: {}
+[1.604059] (ros2_maritime) StdoutLine: {'line': b'running egg_info\n'}
+[1.605574] (-) TimerEvent: {}
+[1.631190] (ros2_maritime) StdoutLine: {'line': b'writing ../../build/ros2_maritime/ros2_maritime.egg-info/PKG-INFO\n'}
+[1.632628] (ros2_maritime) StdoutLine: {'line': b'writing dependency_links to ../../build/ros2_maritime/ros2_maritime.egg-info/dependency_links.txt\n'}
+[1.633074] (ros2_maritime) StdoutLine: {'line': b'writing entry points to ../../build/ros2_maritime/ros2_maritime.egg-info/entry_points.txt\n'}
+[1.633441] (ros2_maritime) StdoutLine: {'line': b'writing requirements to ../../build/ros2_maritime/ros2_maritime.egg-info/requires.txt\n'}
+[1.633622] (ros2_maritime) StdoutLine: {'line': b'writing top-level names to ../../build/ros2_maritime/ros2_maritime.egg-info/top_level.txt\n'}
+[1.685610] (ros2_maritime) StdoutLine: {'line': b"reading manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'\n"}
+[1.686938] (ros2_maritime) StdoutLine: {'line': b"writing manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'\n"}
+[1.687242] (ros2_maritime) StdoutLine: {'line': b'running build\n'}
+[1.687411] (ros2_maritime) StdoutLine: {'line': b'running build_py\n'}
+[1.688243] (ros2_maritime) StdoutLine: {'line': b'running install\n'}
+[1.697957] (ros2_maritime) StdoutLine: {'line': b'running install_lib\n'}
+[1.705667] (-) TimerEvent: {}
+[1.725896] (ros2_maritime) StdoutLine: {'line': b'running install_data\n'}
+[1.726949] (ros2_maritime) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.754281] (ros2_maritime) StdoutLine: {'line': b"removing '/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info' (and everything under it)\n"}
+[1.754645] (ros2_maritime) StdoutLine: {'line': b'Copying ../../build/ros2_maritime/ros2_maritime.egg-info to /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info\n'}
+[1.755531] (ros2_maritime) StdoutLine: {'line': b'running install_scripts\n'}
+[1.805775] (-) TimerEvent: {}
+[1.906081] (-) TimerEvent: {}
+[1.932473] (ros2_maritime) StdoutLine: {'line': b'Installing altimeter_converter script to /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime\n'}
+[1.935293] (ros2_maritime) StdoutLine: {'line': b'Installing magnetometer_converter script to /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime\n'}
+[1.935912] (ros2_maritime) StdoutLine: {'line': b"writing list of installed files to '/home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log'\n"}
+[1.974585] (ros2_maritime) CommandEnded: {'returncode': 0}
+[1.997942] (ros2_maritime) JobEnded: {'identifier': 'ros2_maritime', 'rc': 0}
+[2.006276] (-) TimerEvent: {}
+[2.106563] (-) TimerEvent: {}
+[2.206935] (-) TimerEvent: {}
+[2.307308] (-) TimerEvent: {}
+[2.407702] (-) TimerEvent: {}
+[2.508073] (-) TimerEvent: {}
+[2.608587] (-) TimerEvent: {}
+[2.708976] (-) TimerEvent: {}
+[2.809390] (-) TimerEvent: {}
+[2.909784] (-) TimerEvent: {}
+[3.010166] (-) TimerEvent: {}
+[3.110552] (-) TimerEvent: {}
+[3.210917] (-) TimerEvent: {}
+[3.311293] (-) TimerEvent: {}
+[3.411677] (-) TimerEvent: {}
+[3.512065] (-) TimerEvent: {}
+[3.612449] (-) TimerEvent: {}
+[3.712820] (-) TimerEvent: {}
+[3.813171] (-) TimerEvent: {}
+[3.913535] (-) TimerEvent: {}
+[4.013884] (-) TimerEvent: {}
+[4.114231] (-) TimerEvent: {}
+[4.214598] (-) TimerEvent: {}
+[4.314945] (-) TimerEvent: {}
+[4.415296] (-) TimerEvent: {}
+[4.469005] (gazebo_maritime) StdoutLine: {'line': b'[ 25%] \x1b[32m\x1b[1mLinking CXX shared library libWaves.so\x1b[0m\n'}
+[4.515514] (-) TimerEvent: {}
+[4.615941] (-) TimerEvent: {}
+[4.716347] (-) TimerEvent: {}
+[4.755664] (gazebo_maritime) StdoutLine: {'line': b'[ 25%] Built target Waves\n'}
+[4.800192] (gazebo_maritime) StdoutLine: {'line': b'[ 37%] \x1b[32mBuilding CXX object CMakeFiles/PublisherPlugin.dir/src/PublisherPlugin.cc.o\x1b[0m\n'}
+[4.802394] (gazebo_maritime) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/Surface.dir/src/Surface.cc.o\x1b[0m\n'}
+[4.804322] (gazebo_maritime) StdoutLine: {'line': b'[ 62%] \x1b[32mBuilding CXX object CMakeFiles/WaveVisual.dir/src/WaveVisual.cc.o\x1b[0m\n'}
+[4.816535] (-) TimerEvent: {}
+[4.917021] (-) TimerEvent: {}
+[5.017504] (-) TimerEvent: {}
+[5.117990] (-) TimerEvent: {}
+[5.218599] (-) TimerEvent: {}
+[5.319044] (-) TimerEvent: {}
+[5.419495] (-) TimerEvent: {}
+[5.519944] (-) TimerEvent: {}
+[5.620399] (-) TimerEvent: {}
+[5.720845] (-) TimerEvent: {}
+[5.821292] (-) TimerEvent: {}
+[5.921760] (-) TimerEvent: {}
+[6.022205] (-) TimerEvent: {}
+[6.122673] (-) TimerEvent: {}
+[6.223120] (-) TimerEvent: {}
+[6.323570] (-) TimerEvent: {}
+[6.424014] (-) TimerEvent: {}
+[6.524460] (-) TimerEvent: {}
+[6.624903] (-) TimerEvent: {}
+[6.725350] (-) TimerEvent: {}
+[6.825840] (-) TimerEvent: {}
+[6.926288] (-) TimerEvent: {}
+[7.026751] (-) TimerEvent: {}
+[7.127201] (-) TimerEvent: {}
+[7.227683] (-) TimerEvent: {}
+[7.328136] (-) TimerEvent: {}
+[7.428587] (-) TimerEvent: {}
+[7.529044] (-) TimerEvent: {}
+[7.629487] (-) TimerEvent: {}
+[7.729936] (-) TimerEvent: {}
+[7.830399] (-) TimerEvent: {}
+[7.930849] (-) TimerEvent: {}
+[8.031307] (-) TimerEvent: {}
+[8.131775] (-) TimerEvent: {}
+[8.232222] (-) TimerEvent: {}
+[8.332690] (-) TimerEvent: {}
+[8.433131] (-) TimerEvent: {}
+[8.533588] (-) TimerEvent: {}
+[8.634037] (-) TimerEvent: {}
+[8.734486] (-) TimerEvent: {}
+[8.834931] (-) TimerEvent: {}
+[8.935366] (-) TimerEvent: {}
+[9.035844] (-) TimerEvent: {}
+[9.136285] (-) TimerEvent: {}
+[9.236741] (-) TimerEvent: {}
+[9.337179] (-) TimerEvent: {}
+[9.437642] (-) TimerEvent: {}
+[9.537982] (-) TimerEvent: {}
+[9.580642] (gazebo_maritime) StdoutLine: {'line': b'[ 75%] \x1b[32m\x1b[1mLinking CXX shared library libPublisherPlugin.so\x1b[0m\n'}
+[9.638128] (-) TimerEvent: {}
+[9.738466] (-) TimerEvent: {}
+[9.838863] (-) TimerEvent: {}
+[9.884511] (gazebo_maritime) StdoutLine: {'line': b'[ 75%] Built target PublisherPlugin\n'}
+[9.939073] (-) TimerEvent: {}
+[10.039467] (-) TimerEvent: {}
+[10.139872] (-) TimerEvent: {}
+[10.240270] (-) TimerEvent: {}
+[10.340684] (-) TimerEvent: {}
+[10.441078] (-) TimerEvent: {}
+[10.541476] (-) TimerEvent: {}
+[10.641879] (-) TimerEvent: {}
+[10.741413] (gazebo_maritime) StdoutLine: {'line': b'[ 87%] \x1b[32m\x1b[1mLinking CXX shared library libSurface.so\x1b[0m\n'}
+[10.741945] (-) TimerEvent: {}
+[10.842280] (-) TimerEvent: {}
+[10.942713] (-) TimerEvent: {}
+[11.043128] (-) TimerEvent: {}
+[11.081050] (gazebo_maritime) StdoutLine: {'line': b'[ 87%] Built target Surface\n'}
+[11.143328] (-) TimerEvent: {}
+[11.243714] (-) TimerEvent: {}
+[11.344079] (-) TimerEvent: {}
+[11.444448] (-) TimerEvent: {}
+[11.544802] (-) TimerEvent: {}
+[11.645151] (-) TimerEvent: {}
+[11.745503] (-) TimerEvent: {}
+[11.845852] (-) TimerEvent: {}
+[11.946198] (-) TimerEvent: {}
+[12.046543] (-) TimerEvent: {}
+[12.146900] (-) TimerEvent: {}
+[12.247253] (-) TimerEvent: {}
+[12.347627] (-) TimerEvent: {}
+[12.447975] (-) TimerEvent: {}
+[12.548328] (-) TimerEvent: {}
+[12.648759] (-) TimerEvent: {}
+[12.684347] (gazebo_maritime) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX shared library libWaveVisual.so\x1b[0m\n'}
+[12.748888] (-) TimerEvent: {}
+[12.849310] (-) TimerEvent: {}
+[12.949699] (-) TimerEvent: {}
+[12.972813] (gazebo_maritime) StdoutLine: {'line': b'[100%] Built target WaveVisual\n'}
+[12.989593] (gazebo_maritime) CommandEnded: {'returncode': 0}
+[12.990964] (gazebo_maritime) JobProgress: {'identifier': 'gazebo_maritime', 'progress': 'install'}
+[13.006202] (gazebo_maritime) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/pc/gazebo_maritime_ws/build/gazebo_maritime'], 'cwd': '/home/pc/gazebo_maritime_ws/build/gazebo_maritime', 'env': OrderedDict({'GZ_SIM_SYSTEM_PLUGIN_PATH': ':/home/pc/gazebo_maritime_ws/install/lib:/home/pc/gazebo_maritime_ws/install/lib', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'GZ_SIM_RESOURCE_PATH': '/home/pc/vrx_ws/src/vrx/vrx_gazebo/models:/home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models', 'USER': 'pc', 'GZ_CONFIG_PATH': '/usr/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib:/usr/local/lib:/home/pc/gazebo_maritime_ws/install/lib:/usr/local/lib:/home/pc/gazebo_maritime_ws/install/lib', 'HOME': '/home/pc', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '2343', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=9bdf152d8385d92ace3d579168a71c51', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/pc/ros2_ws/install', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'pc', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'pc', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/pc-MINIPC-PN64:@/tmp/.ICE-unix/2343,unix/pc-MINIPC-PN64:/tmp/.ICE-unix/2343', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/093d0ff8_8f3e_42fe_83eb_3acdab4e713c', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.KHTWB3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.123', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/pc/ros2_ws/install/usv_description:/home/pc/ros2_ws/install/try_description:/home/pc/ros2_ws/install/urdf_tutorial:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'IGN_GAZEBO_RESOURCE_PATH': '/opt/ros/jazzy/share', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/pc/gazebo_maritime_ws/build/gazebo_maritime', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=9bdf152d8385d92ace3d579168a71c51', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/pc/ros2_ws/install/usv_description/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages:/usr/lib/python3/dist-packages:/usr/lib/python3/dist-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/home/pc/ros2_ws/install/try_description:/home/pc/ros2_ws/install/urdf_tutorial:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}), 'shell': False}
+[13.019123] (gazebo_maritime) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[13.020120] (gazebo_maritime) StdoutLine: {'line': b'-- Installing: /home/pc/gazebo_maritime_ws/install/lib/libWaves.so\n'}
+[13.021264] (gazebo_maritime) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/pc/gazebo_maritime_ws/install/lib/libWaves.so" to ""\n'}
+[13.021676] (gazebo_maritime) StdoutLine: {'line': b'-- Installing: /home/pc/gazebo_maritime_ws/install/lib/libPublisherPlugin.so\n'}
+[13.022691] (gazebo_maritime) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/pc/gazebo_maritime_ws/install/lib/libPublisherPlugin.so" to ""\n'}
+[13.023058] (gazebo_maritime) StdoutLine: {'line': b'-- Installing: /home/pc/gazebo_maritime_ws/install/lib/libSurface.so\n'}
+[13.024685] (gazebo_maritime) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/pc/gazebo_maritime_ws/install/lib/libSurface.so" to ""\n'}
+[13.024990] (gazebo_maritime) StdoutLine: {'line': b'-- Installing: /home/pc/gazebo_maritime_ws/install/lib/libWaveVisual.so\n'}
+[13.027100] (gazebo_maritime) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/pc/gazebo_maritime_ws/install/lib/libWaveVisual.so" to ""\n'}
+[13.027299] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models\n'}
+[13.027612] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves\n'}
+[13.027739] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials\n'}
+[13.027824] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/programs\n'}
+[13.027897] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/programs/GerstnerWaves_fs_330.glsl\n'}
+[13.027970] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/programs/GerstnerWaves_vs_330.glsl\n'}
+[13.028040] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/textures\n'}
+[13.028110] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/textures/wave_normals.dds\n'}
+[13.028179] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/materials/textures/skybox_lowres.dds\n'}
+[13.028245] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/model.config\n'}
+[13.028312] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/model.sdf\n'}
+[13.028411] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/meshes\n'}
+[13.028484] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/coast_waves/meshes/waterlow.dae\n'}
+[13.028555] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v\n'}
+[13.028624] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/model.config\n'}
+[13.028690] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/model.sdf\n'}
+[13.028763] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes\n'}
+[13.028834] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes/propeller.dae\n'}
+[13.028903] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes/WamV.png\n'}
+[13.029032] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes/WAM-V-Base.dae\n'}
+[13.029107] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/models/wam-v/meshes/engine.dae\n'}
+[13.029178] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/worlds\n'}
+[13.029250] (gazebo_maritime) StdoutLine: {'line': b'-- Up-to-date: /home/pc/gazebo_maritime_ws/install/share/gazebo_maritime/worlds/sydney_regatta.sdf\n'}
+[13.030125] (gazebo_maritime) CommandEnded: {'returncode': 0}
+[13.039135] (gazebo_maritime) JobEnded: {'identifier': 'gazebo_maritime', 'rc': 0}
+[13.040174] (-) EventReactorShutdown: {}

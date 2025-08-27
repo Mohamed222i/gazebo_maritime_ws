@@ -22,6 +22,13 @@ def generate_launch_description():
             output="screen"
         ),
 
+        ExecuteProcess(
+            cmd=['ros2', 'run', 'plotjuggler', 'plotjuggler'],
+            output='screen',
+            shell=True
+        ),
+
+
         # robot_state_publisher
         Node(
             package='robot_state_publisher',
@@ -34,20 +41,57 @@ def generate_launch_description():
         ),
 
 
-
-
         Node(
-            package='robot_localization',
-            executable='navsat_transform_node',
-            name='navsat_transform_node',
-            output='screen',
-            parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/navsat.yaml'],
-            remappings=[
-                ('/gps/fix', '/navsat')
-            ]
+            package='ros2_maritime',
+            executable='altimeter_converter',
+            name='altimeter_converter'
+        ),
+        Node(
+            package='ros2_maritime',
+            executable='magnetometer_converter',
+            name='magnetometer_converter'
+        ),
+        Node(
+            package='ros2_maritime',
+            executable='imu_covariance',
+            name='imu_covariance'
         ),
 
 
+
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0',
+                       'base_link', 'wam-v/base_link/imu_sensor']
+        ),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0',
+                       'base_link', 'left_engine_link']
+        ),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0',
+                       'base_link', 'right_engine_link']
+        ),
+
+
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0',
+                       'base_link', 'wam-v/base_link/navsat_sensor']
+        ),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0',
+                       'base_link', 'wam-v/base_link/altimeter_sensor']
+        ),
+        
 
 
 
@@ -57,113 +101,24 @@ def generate_launch_description():
             executable='ekf_node',
             name='ekf_filter',
             output='screen',
-            parameters=[
-                {'use_sim_time': True},
-                {'frequency': 30.0},
-                {'sensor_timeout': 2.0},
-                {'two_d_mode': False},     # ENABLE THESE CRITICAL SETTINGS
-                {'publish_acceleration': True},
-                {'publish_transform': True},
-                {'print_diagnostics': True},
-                {'use_control': False},
-                
-                {'odom0': '/odometry/gps'},
-                {'imu0': '/imu'},
-                {'imu1': '/magnetometer_imu'},
-                {'pose0': '/altimeter_pose'},
-
-                {'imu0_differential': False},
-                {'imu0_remove_gravitational_acceleration': True},
-                {'imu0_orientation_covariance': 0.01},
-                {'imu0_angular_velocity_covariance': 0.001},
-                {'imu0_linear_acceleration_covariance': 0.01},
-
-                {'imu0_orientation_covariance': [0.01, 0, 0,
-                                               0, 0.01, 0,
-                                               0, 0, 0.02]},
-                {'imu0_angular_velocity_covariance': [0.001, 0, 0,
-                                                    0, 0.001, 0,
-                                                    0, 0, 0.002]},
-                {'imu0_linear_acceleration_covariance': [0.01, 0, 0,
-                                                       0, 0.01, 0,
-                                                       0, 0, 0.02]},
+            parameters=[ '/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_filter.yaml' ]
+        ),
+       
 
 
-
-
-
-                {'imu1_differential': False},
-                {'imu1_orientation_covariance': 0.05,},
-
-                {'pose0_pose_covariance_diagonal': [0.0, 0.0, 0.1] },
-
-                {'odom0_differential': False},
-                {'odom0_relative': False},
-                {'odom0_pose_covariance_diagonal': [4.0, 4.0, 0.0] },
-                {'odom0_twist_covariance_diagonal': [0.5, 0.5, 0.0] },
-                
-                # Marine-Specific Parameters
-                {'acceleration_limits': [2.0, 2.0, 1.0] },
-                {'deceleration_limits': [2.0, 2.0, 1.0] },
-                {'baro_delay': 0.2 },
-                {'baro_vertical_position_threshold': 0.5 },
-
-
-
-
-                {'odom0_config': [
-                    True, True, False,
-                    False, False, False, 
-                    False, False, False, 
-                    False, False, False, 
-                    False, False, False
-                ]},                
-                {'imu0_config': [
-                    False, False, False,   # Position (x,y,z) - unused
-                    True,  True,  False,    # Roll, Pitch, Yaw (accel/mag primary)
-                    False, False, False,   # Velocity (x,y,z) - unused
-                    True,  True,  True,    # Angular velocity (x,y,z) - secondary for orientation
-                    True,  True,  True     # Acceleration (x,y,z) - secondary for velocity
-                ]},
-
-                {'imu1_config': [
-                    False, False, False,   
-                    False, False,  True,    # Yaw (accel/mag primary)
-                    False, False, False,   
-                    False, False, False,   
-                    False, False, False     
-                ]},
-                {'pose0_config': [
-                    False, False, True,   # Position (x,y,z) 
-                    False, False, False,    
-                    False, False, False,    
-                    False, False, False     
-                ]},  
-                {'publish_tf': True},
-                {'map_frame': 'map'},
-                {'odom_frame': 'odom'},
-                {'base_link_frame': 'base_link'},
-                {'world_frame': 'map'},    ## map or odom ????
-                {'qos_overrides./imu.reliability': 'reliable'},
-                {'qos_overrides./magnetometer_imu.reliability': 'reliable'},
-                {'qos_overrides./altimeter_pose.reliability': 'reliable'},
-                {'process_noise_covariance': [0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1]}
+        Node(
+            package='robot_localization',
+            executable='navsat_transform_node',
+            name='navsat_transform_node',
+            output='screen',
+            parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/navsat.yaml'],
+            remappings=[
+                ('/gps/fix', '/navsat'),
+                ('/imu/data', '/sensor/imu'), 
+                ('/odometry/filtered', '/odometry/filtered')  
             ]
         ),
+
 
 
         # RViz
@@ -175,29 +130,9 @@ def generate_launch_description():
             parameters=[{"use_sim_time": True}]
         ),
 
-        Node(
-            package='ros2_maritime',
-            executable='altimeter_converter',
-            name='altimeter_converter'
-        ),
-        Node(
-            package='ros2_maritime',
-            executable='magnetometer_converter',
-            name='magnetometer_converter'
-        ),
 
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            arguments=['0', '0', '0', '0', '0', '0',
-                       'base_link', 'wam-v/base_link']
-        ),
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            arguments=['0', '0', '0', '0', '0', '0',
-                       'base_link', 'wam-v/base_link/imu_sensor']
-        ),
+
+
 
         # ROS-Gazebo Bridge
         Node(
