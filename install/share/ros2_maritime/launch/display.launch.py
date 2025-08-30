@@ -119,80 +119,66 @@ def generate_launch_description():
         ),
         
 
-        # EKF Node
-        Node(
-            package='robot_localization',
-            executable='ekf_node',
-            name='ekf_filter',
-            output='screen',
-            parameters=[ '/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_filter.yaml' ]
-        ),
-    
-        Node(
-            package='robot_localization',
-            executable='navsat_transform_node',
-            name='navsat_transform_node',
-            output='screen',
-            parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/navsat.yaml'],
-            remappings=[
-                ('/gps/fix', '/sensor/gps'),
-                ('/imu/data', '/sensor/imu'), 
-                ('/odometry/filtered', '/odometry/filtered')  
-            ]
-        ),
-
-
-
-
         ## EKF Node
         #Node(
         #    package='robot_localization',
         #    executable='ekf_node',
-        #    name='ekf_filter_node_odom',
-        #    parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
-        #    remappings=[
-        #        ('/odometry/filtered', '/odometry/local')
-        #    ],
-        #    output='screen'
-#
+        #    name='ekf_filter',
+        #    output='screen',
+        #    parameters=[ '/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_filter.yaml' ]
         #),
-#
-        #Node(
-        #    package='robot_localization',
-        #    executable='ekf_node',
-        #    name='ekf_filter_node_map',
-        #    parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
-        #    remappings=[
-        #        ('/odometry/filtered', '/odometry/filtered')
-        #    ],
-        #    output='screen'
-        #),
-#
+    #
         #Node(
         #    package='robot_localization',
         #    executable='navsat_transform_node',
-        #    name='navsat_transform',
-        #    parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
+        #    name='navsat_transform_node',
+        #    output='screen',
+        #    parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/navsat.yaml'],
         #    remappings=[
-        #        ('/imu', '/sensor/imu'),
         #        ('/gps/fix', '/sensor/gps'),
-        #        ('/odometry/filtered', '/odometry/filtered')
-        #    ],
-        #    output='screen'
+        #        ('/imu/data', '/sensor/imu'), 
+        #        ('/odometry/filtered', '/odometry/filtered')  
+        #    ]
         #),
-#
 
 
 
+        # EKF Node
+        Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node_odom',
+            parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
+            remappings=[
+                ('/odometry/filtered', '/odometry/local')
+            ],
+            output='screen'
 
+        ),
 
+        Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node_map',
+            parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
+            remappings=[
+                ('/odometry/filtered', '/odometry/filtered')
+            ],
+            output='screen'
+        ),
 
-
-
-
-
-
-
+        Node(
+            package='robot_localization',
+            executable='navsat_transform_node',
+            name='navsat_transform',
+            parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
+            remappings=[
+                ('/imu', '/sensor/imu'),
+                ('/gps/fix', '/sensor/gps'),
+                ('/odometry/filtered', '/odometry/filtered')
+            ],
+            output='screen'
+        ),
 
 
 

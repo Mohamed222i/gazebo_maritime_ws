@@ -1,0 +1,16 @@
+digraph G {
+"base_link" -> "left_engine_link"[label=" Broadcaster: default_authority\nAverage rate: 19.465\nBuffer length: 4.264\nMost recent transform: 555.62\nOldest transform: 551.356\n"];
+"odom" -> "base_link"[label=" Broadcaster: default_authority\nAverage rate: 6.144\nBuffer length: 4.72\nMost recent transform: 555.028\nOldest transform: 550.308\n"];
+"left_engine_link" -> "left_propeller_link"[label=" Broadcaster: default_authority\nAverage rate: 19.431\nBuffer length: 4.992\nMost recent transform: 555.62\nOldest transform: 550.628\n"];
+"base_link" -> "right_engine_link"[label=" Broadcaster: default_authority\nAverage rate: 19.433\nBuffer length: 4.94\nMost recent transform: 555.62\nOldest transform: 550.68\n"];
+"right_engine_link" -> "right_propeller_link"[label=" Broadcaster: default_authority\nAverage rate: 19.431\nBuffer length: 4.992\nMost recent transform: 555.62\nOldest transform: 550.628\n"];
+"base_link" -> "wam-v/base_link/imu_sensor"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "odom"[label=" Broadcaster: default_authority\nAverage rate: 3.998\nBuffer length: 4.752\nMost recent transform: 555.096\nOldest transform: 550.344\n"];
+"map" -> "utm"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "wam-v/base_link/altimeter_sensor"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "wam-v/base_link/navsat_sensor"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1756577089.0010226"[ shape=plaintext ] ;
+}->"map";
+}

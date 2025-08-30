@@ -53,6 +53,13 @@ ekf_filter_node_odom:
 
     use_control: false
 
+
+
+
+
+    qos_overrides./sensor/imu.reliability: "reliable"
+    qos_overrides./sensor/magnetometer.reliability: "reliable"
+    qos_overrides./sensor/altimeter.reliability: "reliable"
     # Keep your existing covariance matrices
     process_noise_covariance: [1e-3, 0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
                               0.0,    1e-3,  0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
