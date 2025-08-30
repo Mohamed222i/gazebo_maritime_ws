@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+import math
+import rclpy
+from rclpy.node import Node
+from nav_msgs.msg import Odometry, Path
+from geometry_msgs.msg import PoseStamped
+from std_msgs.msg import Float64
+
+
+def wrap_to_pi(a):
+    a = (a + math.pi) % (2.0 * math.pi) - math.pi
+    return a
+
+
+def sat(x):
+    return max(-1.0, min(1.0, x))
+
+
+def yaw_from_quat(q):
+    # ZYX yaw from quaternion
+    siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+    cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+    return math.atan2(siny_cosp, cosy_cosp)
+
+
+class SMCUSV(Node):
+    def __init__(self):
+        super().__init__('smc_control')
+
+        # Parameters (tune these)
+        self.declare_parameter('control_rate_hz', 20.0)
+        self.declare_parameter('reference_path_topic', '/reference_path')
+        self.declare_parameter('odom_topic', '/odometry/filtered')
+        self.declare_parameter('left_thrust_topic', '/wamv/left_thrust')
+        self.declare_parameter('right_thrust_topic', '/wamv/right_thrust')
+
+        # Speed control
+        self.declare_parameter('v_ref', 1.0)        # desired surge speed [m/s]
+        self.declare_parameter('k_v', 20.0)         # speed SMC gain
+        self.declare_parameter('phi_v', 0.2)        # speed boundary layer
+
+        # Yaw / path-following control
+        self.declare_parameter('lookahead_dist', 3.0)  # path lookahead [m]
+        self.declare_parameter('k_ct', 1.0)            # cross-track weight in surface
+        self.declare_parameter('k_s', 0.8)             # switching gain for yaw surface
+        self.declare_parameter('k_d', 0.3)             # damping on yaw rate
+        self.declare_parameter('phi_yaw', 0.1)         # yaw boundary layer
+
+        # Thrust mapping & limits
+        self.declare_parameter('thrust_min', 0.0)
+        self.declare_parameter('thrust_max', 100.0)
+        self.declare_parameter('diff_gain', 30.0)      # yaw-to-differential thrust scaling
+
+        # Read params
+        self.rate_hz = float(self.get_parameter('control_rate_hz').value)
+        self.path_topic = self.get_parameter('reference_path_topic').value
+        self.odom_topic = self.get_parameter('odom_topic').value
+        self.left_topic = self.get_parameter('left_thrust_topic').value
+        self.right_topic = self.get_parameter('right_thrust_topic').value
+
+        self.v_ref = float(self.get_parameter('v_ref').value)
+        self.k_v = float(self.get_parameter('k_v').value)
+        self.phi_v = float(self.get_parameter('phi_v').value)
+
+        self.Ld = float(self.get_parameter('lookahead_dist').value)
+        self.k_ct = float(self.get_parameter('k_ct').value)
+        self.k_s = float(self.get_parameter('k_s').value)
+        self.k_d = float(self.get_parameter('k_d').value)
+        self.phi_yaw = float(self.get_parameter('phi_yaw').value)
+
+        self.u_min = float(self.get_parameter('thrust_min').value)
+        self.u_max = float(self.get_parameter('thrust_max').value)
+        self.diff_gain = float(self.get_parameter('diff_gain').value)
+
+        # IO
+        self.left_pub = self.create_publisher(Float64, self.left_topic, 10)
+        self.right_pub = self.create_publisher(Float64, self.right_topic, 10)
+        self.path_sub = self.create_subscription(Path, self.path_topic, self.path_cb, 10)
+        self.odom_sub = self.create_subscription(Odometry, self.odom_topic, self.odom_cb, 10)
+
+        # State
+        self.path_pts = []   # list of (x, y)
+        self.have_odom = False
+        self.x = self.y = 0.0
+        self.yaw = 0.0
+        self.vx = self.vy = 0.0
+        self.omega_z = 0.0
+
+        # Control loop
+        dt = 1.0 / max(1.0, self.rate_hz)
+        self.timer = self.create_timer(dt, self.control_step)
+
+        self.get_logger().info(f'SMC controller running at {self.rate_hz} Hz. '
+                               f'Path: {self.path_topic}, Odom: {self.odom_topic}')
+
+    def path_cb(self, msg: Path):
+        self.path_pts = [(p.pose.position.x, p.pose.position.y) for p in msg.poses]
+        # Optionally decimate or smooth if path is dense
+
+    def odom_cb(self, msg: Odometry):
+        self.x = msg.pose.pose.position.x
+        self.y = msg.pose.pose.position.y
+        self.yaw = yaw_from_quat(msg.pose.pose.orientation)
+        self.vx = msg.twist.twist.linear.x
+        self.vy = msg.twist.twist.linear.y
+        self.omega_z = msg.twist.twist.angular.z
+        self.have_odom = True
+
+    def control_step(self):
+        if not self.have_odom or len(self.path_pts) < 2:
+            return
+
+        # 1) Choose target point with simple closest + lookahead policy
+        ix_closest = self._closest_index(self.x, self.y, self.path_pts)
+        ix_target = min(ix_closest + max(1, int(self.Ld)), len(self.path_pts) - 1)
+        px, py = self.path_pts[ix_closest]
+        tx, ty = self.path_pts[ix_target]
+
+        # Reference tangent and desired heading
+        dx = tx - px
+        dy = ty - py
+        if dx == 0.0 and dy == 0.0:
+            return
+        psi_d = math.atan2(dy, dx)
+
+        # 2) Errors
+        e_psi = wrap_to_pi(psi_d - self.yaw)
+        # signed cross-track distance to the line through (px,py)->(tx,ty)
+        t_norm = math.hypot(dx, dy)
+        tx_h = dx / t_norm
+        ty_h = dy / t_norm
+        ex = self.x - px
+        ey = self.y - py
+        e_ct = (-ty_h) * ex + (tx_h) * ey  # left-positive signed distance
+
+        # 3) Sliding surfaces and controls
+        # Speed control (surge)
+        v = math.hypot(self.vx, self.vy)
+        s_v = (v - self.v_ref)  # drive to zero
+        u_surge = self._clamp(self.u_min, self.u_max, self._thrust_from_speed(s_v))
+
+        # Yaw/path control (combine heading and cross-track into one surface)
+        # s = e_psi + k_ct * atan2(e_ct, Ld)
+        s_yaw = e_psi + self.k_ct * math.atan2(e_ct, max(1e-3, self.Ld))
+        # Include damping term on yaw rate as "equivalent control"
+        u_yaw = - self.k_s * sat(s_yaw / self.phi_yaw) - self.k_d * self.omega_z
+
+        # Map yaw control to differential thrust
+        diff = self.diff_gain * u_yaw
+        left_cmd = self._clamp(self.u_min, self.u_max, u_surge - diff)
+        right_cmd = self._clamp(self.u_min, self.u_max, u_surge + diff)
+
+        # 4) Publish commands
+        self.left_pub.publish(Float64(data=left_cmd))
+        self.right_pub.publish(Float64(data=right_cmd))
+
+    def _closest_index(self, x, y, pts):
+        best_i = 0
+        best_d2 = float('inf')
+        for i, (px, py) in enumerate(pts):
+            d2 = (x - px) * (x - px) + (y - py) * (y - py)
+            if d2 < best_d2:
+                best_i, best_d2 = i, d2
+        return best_i
+
+    def _thrust_from_speed(self, s_v):
+        # SMC with boundary layer for surge
+        return self._map_thrust(self.v_ref) - self.k_v * sat(s_v / self.phi_v)
+
+    def _map_thrust(self, v_ref):
+        # Simple linear map: tune for your platform (feedforward)
+        # For sim: 0..100 thrust for 0..v_ref_max
+        v_ref_max = max(0.1, self.v_ref)
+        return self.u_max * (self.v_ref / v_ref_max)
+
+    @staticmethod
+    def _clamp(a, b, x):
+        lo, hi = (a, b) if a <= b else (b, a)
+        return max(lo, min(hi, x))
+
+
+def main():
+    rclpy.init()
+    node = SMCUSV()
+    rclpy.spin(node)
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()

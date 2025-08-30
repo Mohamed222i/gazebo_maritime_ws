@@ -2,8 +2,8 @@ ekf_filter:
   ros__parameters:
     use_sim_time: true
     frequency: 30.0
-    sensor_timeout: 2.0
-    transform_timeout: 0.0
+    sensor_timeout: 0.3
+    transform_timeout: 0.15
     two_d_mode: false
     publish_acceleration: true
     print_diagnostics: true
@@ -14,30 +14,7 @@ ekf_filter:
     imu1: "/sensor/magnetometer"
     pose0: "/sensor/altimeter"
 
-    imu0_differential: false
-    imu0_remove_gravitational_acceleration: true
 
-    imu0_orientation_covariance: [0.01, 0.0, 0.0,
-                                   0.0, 0.01, 0.0,
-                                   0.0, 0.0, 0.02]
-    imu0_angular_velocity_covariance: [0.001, 0.0, 0.0,
-                                        0.0, 0.001, 0.0,
-                                        0.0, 0.0, 0.002]
-    imu0_linear_acceleration_covariance: [0.01, 0.0, 0.0,
-                                           0.0, 0.01, 0.0,
-                                           0.0, 0.0, 0.02]
-
-    pose0_pose_covariance_diagonal: [0.0, 0.0, 0.1]
-
-    odom0_differential: false
-    odom0_relative: false
-    odom0_pose_covariance_diagonal: [4.0, 4.0, 0.0]
-    odom0_twist_covariance_diagonal: [0.5, 0.5, 0.0]
-
-    acceleration_limits: [2.0, 2.0, 1.0]
-    deceleration_limits: [2.0, 2.0, 1.0]
-    baro_delay: 0.2
-    baro_vertical_position_threshold: 0.5
 
     odom0_config: [true,  true,  false,
                    false, false, false,
@@ -45,11 +22,35 @@ ekf_filter:
                    false, false, false,
                    false, false, false]
 
+
+    odom0_pose_covariance_diagonal: [0.25, 0.25, 1e9, 1e9, 1e9, 1e9]  # σx=σy≈0.5 m
+    odom0_differential: false
+    odom0_relative: false
+
     imu0_config: [false, false, false,
                   true,  true,  false,
                   false, false, false,
                   true,  true,  true,
-                  true,  true,  true]
+                  true,  true, true]
+
+
+
+    imu0_differential: true
+    imu0_remove_gravitational_acceleration: true
+
+    imu0_orientation_covariance: [0.01, 0.0, 0.0,
+                                   0.0, 0.01, 0.0,
+                                   0.0, 0.0, 0.1]
+    imu0_angular_velocity_covariance: [0.001, 0.0, 0.0,
+                                        0.0, 0.001, 0.0,
+                                        0.0, 0.0, 0.002]
+    imu0_linear_acceleration_covariance: [2.0, 0.0, 0.0,
+                                           0.0, 2.0, 0.0,
+                                           0.0, 0.0, 2.0]
+
+
+
+
 
     imu1_config: [false, false, false,
                   false, false, true,
@@ -60,7 +61,13 @@ ekf_filter:
     pose0_config: [false, false, true,
                    false, false, false,
                    false, false, false,
+                   false, false, false,
                    false, false, false]
+
+    pose0_pose_covariance_diagonal: [1e9, 1e9, 0.02, 1e9, 1e9, 1e9]
+
+
+
 
     publish_tf: true
     map_frame: "map"
@@ -68,22 +75,23 @@ ekf_filter:
     base_link_frame: "base_link"
     world_frame: "odom"
 
-    qos_overrides./sensor/imu.reliability: "BEST_EFFORT"
+    qos_overrides./sensor/imu.reliability: "reliable"
     qos_overrides./sensor/magnetometer.reliability: "reliable"
     qos_overrides./sensor/altimeter.reliability: "reliable"
+    qos_overrides./odometry/gps.reliability: "reliable"
 
-    process_noise_covariance: [0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0,
+    process_noise_covariance: [0.005, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.005, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.003, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.0, 0.003, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.0, 0.0, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
+                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
                                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
                                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
                                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1]

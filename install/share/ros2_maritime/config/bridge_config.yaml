@@ -28,7 +28,6 @@
   gz_type_name: "gz.msgs.Altimeter"
   direction: "GZ_TO_ROS"
 
-
 # Topic published by JointStatePublisher plugin
 - ros_topic_name: "/joint_states"
   gz_topic_name: "/joint_states"

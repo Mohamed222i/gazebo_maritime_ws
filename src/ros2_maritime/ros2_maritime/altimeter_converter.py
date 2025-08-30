@@ -23,7 +23,7 @@ class AltimeterConverter(Node):
         pose_msg = PoseWithCovarianceStamped()
         pose_msg.header = msg.header
         pose_msg.pose.pose.position.z = msg.vertical_position
-        pose_msg.pose.covariance[14] = 0.1  # Z covariance
+        pose_msg.pose.covariance[14] = 0.5  # Z covariance
         self.pub.publish(pose_msg)
 
 def main(args=None):

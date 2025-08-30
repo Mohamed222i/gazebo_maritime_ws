@@ -10,6 +10,9 @@ def generate_launch_description():
     gazebo_world_path = "/home/pc/gazebo_maritime_ws/src/gazebo_maritime/worlds/sydney_regatta.sdf"
     urdf_path = "/home/pc/gazebo_maritime_ws/src/gazebo_maritime/models/wam-v/model.sdf"
     bridge_config_path = "/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/bridge_config.yaml"
+    #plot_path= "/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/graph2.xml"
+
+
 
     # Load bridge config
     with open(bridge_config_path, 'r') as f:
@@ -20,12 +23,6 @@ def generate_launch_description():
         ExecuteProcess(
             cmd=["gz", "sim", gazebo_world_path],
             output="screen"
-        ),
-
-        ExecuteProcess(
-            cmd=['ros2', 'run', 'plotjuggler', 'plotjuggler'],
-            output='screen',
-            shell=True
         ),
 
 
@@ -39,6 +36,8 @@ def generate_launch_description():
                 {'use_sim_time': LaunchConfiguration('use_sim_time', default='true')}
             ]
         ),
+
+
 
 
         Node(
@@ -57,6 +56,26 @@ def generate_launch_description():
             name='imu_covariance'
         ),
 
+        Node(
+            package='ros2_maritime',
+            executable='gps_cov',
+            name='gps_cov'
+        ),
+        
+
+
+        Node(
+            package='ros2_maritime',
+            executable='path_publisher',
+            name='path_publisher'
+        ),
+        Node(
+            package='ros2_maritime',
+            executable='smc_control',
+            name='smc_control'
+        ),
+
+
 
 
         Node(
@@ -65,6 +84,14 @@ def generate_launch_description():
             arguments=['0', '0', '0', '0', '0', '0',
                        'base_link', 'wam-v/base_link/imu_sensor']
         ),
+
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0',
+                       'map', 'odom']
+        ),
+
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
@@ -77,7 +104,6 @@ def generate_launch_description():
             arguments=['0', '0', '0', '0', '0', '0',
                        'base_link', 'right_engine_link']
         ),
-
 
         Node(
             package='tf2_ros',
@@ -93,8 +119,6 @@ def generate_launch_description():
         ),
         
 
-
-
         # EKF Node
         Node(
             package='robot_localization',
@@ -103,9 +127,7 @@ def generate_launch_description():
             output='screen',
             parameters=[ '/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_filter.yaml' ]
         ),
-       
-
-
+    
         Node(
             package='robot_localization',
             executable='navsat_transform_node',
@@ -113,11 +135,66 @@ def generate_launch_description():
             output='screen',
             parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/navsat.yaml'],
             remappings=[
-                ('/gps/fix', '/navsat'),
+                ('/gps/fix', '/sensor/gps'),
                 ('/imu/data', '/sensor/imu'), 
                 ('/odometry/filtered', '/odometry/filtered')  
             ]
         ),
+
+
+
+
+        ## EKF Node
+        #Node(
+        #    package='robot_localization',
+        #    executable='ekf_node',
+        #    name='ekf_filter_node_odom',
+        #    parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
+        #    remappings=[
+        #        ('/odometry/filtered', '/odometry/local')
+        #    ],
+        #    output='screen'
+#
+        #),
+#
+        #Node(
+        #    package='robot_localization',
+        #    executable='ekf_node',
+        #    name='ekf_filter_node_map',
+        #    parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
+        #    remappings=[
+        #        ('/odometry/filtered', '/odometry/filtered')
+        #    ],
+        #    output='screen'
+        #),
+#
+        #Node(
+        #    package='robot_localization',
+        #    executable='navsat_transform_node',
+        #    name='navsat_transform',
+        #    parameters=['/home/pc/gazebo_maritime_ws/src/ros2_maritime/config/ekf_dual_filter.yaml'],
+        #    remappings=[
+        #        ('/imu', '/sensor/imu'),
+        #        ('/gps/fix', '/sensor/gps'),
+        #        ('/odometry/filtered', '/odometry/filtered')
+        #    ],
+        #    output='screen'
+        #),
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -131,7 +208,12 @@ def generate_launch_description():
         ),
 
 
-
+        #Node(
+        #    package='plotjuggler',
+        #    executable='plotjuggler',
+        #    arguments=['--layout', plot_path],
+        #    output='screen'
+        #),
 
 
         # ROS-Gazebo Bridge

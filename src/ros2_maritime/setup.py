@@ -29,8 +29,11 @@ setup(
         'console_scripts': [
             'altimeter_converter = ros2_maritime.altimeter_converter:main',
             'imu_covariance = ros2_maritime.imu_covariance:main',
+            'gps_cov = ros2_maritime.gps_cov:main',
             'magnetometer_converter = ros2_maritime.magnetometer_converter:main',
-            'usv_breadcrumb = ros2_maritime.usv_breadcrumb:main'
+            'usv_breadcrumb = ros2_maritime.usv_breadcrumb:main',
+            'smc_control = ros2_maritime.smc_control:main',
+            'path_publisher = ros2_maritime.path_publisher:main'
         ],
     },
 )

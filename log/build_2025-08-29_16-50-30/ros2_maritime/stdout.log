@@ -1,0 +1,29 @@
+running egg_info
+writing ../../build/ros2_maritime/ros2_maritime.egg-info/PKG-INFO
+writing dependency_links to ../../build/ros2_maritime/ros2_maritime.egg-info/dependency_links.txt
+writing entry points to ../../build/ros2_maritime/ros2_maritime.egg-info/entry_points.txt
+writing requirements to ../../build/ros2_maritime/ros2_maritime.egg-info/requires.txt
+writing top-level names to ../../build/ros2_maritime/ros2_maritime.egg-info/top_level.txt
+reading manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'
+writing manifest file '../../build/ros2_maritime/ros2_maritime.egg-info/SOURCES.txt'
+running build
+running build_py
+copying ros2_maritime/gps_vel.py -> /home/pc/gazebo_maritime_ws/build/ros2_maritime/build/lib/ros2_maritime
+running install
+running install_lib
+copying /home/pc/gazebo_maritime_ws/build/ros2_maritime/build/lib/ros2_maritime/gps_vel.py -> /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime
+byte-compiling /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/gps_vel.py to gps_vel.cpython-312.pyc
+running install_data
+copying resource/ros2_maritime -> /home/pc/gazebo_maritime_ws/install/share/ament_index/resource_index/packages
+copying launch/display.launch.py -> /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/launch
+copying config/ekf_filter.yaml -> /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/config
+running install_egg_info
+removing '/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info' (and everything under it)
+Copying ../../build/ros2_maritime/ros2_maritime.egg-info to /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info
+running install_scripts
+Installing altimeter_converter script to /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime
+Installing gps_vel script to /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime
+Installing imu_covariance script to /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime
+Installing magnetometer_converter script to /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime
+Installing usv_breadcrumb script to /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime
+writing list of installed files to '/home/pc/gazebo_maritime_ws/build/ros2_maritime/install.log'

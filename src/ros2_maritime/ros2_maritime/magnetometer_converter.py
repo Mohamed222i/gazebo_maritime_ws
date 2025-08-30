@@ -21,6 +21,12 @@ class MagToImu(Node):
         self.last_accel = None
         self.last_mag = None
 
+        # --- NEW: tracking time for rate limit ---
+        self.target_period = 1.0 / 30.0   # seconds
+        self.last_pub_time = self.get_clock().now()
+
+
+
     def imu_cb(self, imu_msg: Imu):
         # Save latest linear acceleration
         self.last_accel = imu_msg.linear_acceleration
@@ -36,6 +42,13 @@ class MagToImu(Node):
     def try_publish(self, header):
         if self.last_accel is None or self.last_mag is None:
             return  # Need both accel and mag
+
+        # --- NEW: check elapsed time ---
+        now = self.get_clock().now()
+        if (now - self.last_pub_time).nanoseconds * 1e-9 < self.target_period:
+            return  # Too soon, skip this one
+        self.last_pub_time = now
+
 
         # --- Compute roll & pitch from accelerometer ---
         ax = self.last_accel.x
