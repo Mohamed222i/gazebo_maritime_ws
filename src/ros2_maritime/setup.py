@@ -33,6 +33,7 @@ setup(
             'magnetometer_converter = ros2_maritime.magnetometer_converter:main',
             'usv_breadcrumb = ros2_maritime.usv_breadcrumb:main',
             'smc_control = ros2_maritime.smc_control:main',
+            'heading = ros2_maritime.heading:main',
             'path_publisher = ros2_maritime.path_publisher:main'
         ],
     },

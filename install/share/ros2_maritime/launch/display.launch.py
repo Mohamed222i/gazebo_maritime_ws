@@ -69,11 +69,6 @@ def generate_launch_description():
             executable='path_publisher',
             name='path_publisher'
         ),
-        Node(
-            package='ros2_maritime',
-            executable='smc_control',
-            name='smc_control'
-        ),
 
 
 
@@ -182,6 +177,19 @@ def generate_launch_description():
 
 
 
+        #Node(
+        #    package='ros2_maritime',
+        #    executable='smc_control',
+        #    name='smc_control'
+        #),
+
+
+        Node(
+            package='ros2_maritime',
+            executable='heading',
+            name='heading'
+        ),
+
 
 
         # RViz
@@ -190,6 +198,7 @@ def generate_launch_description():
             executable="rviz2",
             name="rviz2",
             output="screen",
+            arguments=['-d', '/home/pc/gazebo_maritime_ws/src/ros2_maritime/rviz/conf.rviz'],
             parameters=[{"use_sim_time": True}]
         ),
 

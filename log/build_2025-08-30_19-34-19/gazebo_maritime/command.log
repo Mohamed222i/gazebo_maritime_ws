@@ -1,0 +1,4 @@
+Invoking command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/pc/gazebo_maritime_ws/build/gazebo_maritime -- -j16 -l16
+Invoked command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/pc/gazebo_maritime_ws/build/gazebo_maritime -- -j16 -l16
+Invoking command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/pc/gazebo_maritime_ws/build/gazebo_maritime
+Invoked command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/pc/gazebo_maritime_ws/build/gazebo_maritime

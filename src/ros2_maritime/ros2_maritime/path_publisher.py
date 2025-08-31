@@ -13,9 +13,8 @@ class PathPublisher(Node):
         # Example waypoints in odom frame
         self.waypoints = [
             (0.0, 0.0),
-            (10.0, 0.0),
-            (10.0, 10.0),
-            (0.0, 10.0)
+            (20.0, -20.0),
+            (0.0, 0.0)
         ]
 
     def publish_path(self):

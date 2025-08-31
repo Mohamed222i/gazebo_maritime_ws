@@ -17,10 +17,13 @@ resource/ros2_maritime
 ros2_maritime/__init__.py
 ros2_maritime/altimeter_converter.py
 ros2_maritime/gps_cov.py
+ros2_maritime/heading.py
 ros2_maritime/imu_covariance.py
 ros2_maritime/magnetometer_converter.py
 ros2_maritime/path_publisher.py
+ros2_maritime/smc_control.py
 ros2_maritime/usv_breadcrumb.py
+rviz/conf.rviz
 test/test_copyright.py
 test/test_flake8.py
 test/test_pep257.py

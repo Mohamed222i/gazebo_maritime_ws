@@ -1,14 +1,18 @@
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/gps_cov.py
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/altimeter_converter.py
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/smc_control.py
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/usv_breadcrumb.py
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__init__.py
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/heading.py
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/path_publisher.py
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/imu_covariance.py
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/magnetometer_converter.py
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/gps_cov.cpython-312.pyc
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/altimeter_converter.cpython-312.pyc
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/smc_control.cpython-312.pyc
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/usv_breadcrumb.cpython-312.pyc
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/__init__.cpython-312.pyc
+/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/heading.cpython-312.pyc
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/path_publisher.cpython-312.pyc
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/imu_covariance.cpython-312.pyc
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/__pycache__/magnetometer_converter.cpython-312.pyc
@@ -16,7 +20,7 @@
 /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/package.xml
 /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/launch/display.launch.py
 /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/urdf
-/home/pc/gazebo_maritime_ws/install/share/ros2_maritime/rviz
+/home/pc/gazebo_maritime_ws/install/share/ros2_maritime/rviz/conf.rviz
 /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/gz
 /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/meshes
 /home/pc/gazebo_maritime_ws/install/share/ros2_maritime/config/navsat.yaml
@@ -32,6 +36,7 @@
 /home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime-0.0.0-py3.12.egg-info/entry_points.txt
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/altimeter_converter
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/gps_cov
+/home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/heading
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/imu_covariance
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/magnetometer_converter
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/path_publisher

@@ -1,6 +1,7 @@
 [console_scripts]
 altimeter_converter = ros2_maritime.altimeter_converter:main
 gps_cov = ros2_maritime.gps_cov:main
+heading = ros2_maritime.heading:main
 imu_covariance = ros2_maritime.imu_covariance:main
 magnetometer_converter = ros2_maritime.magnetometer_converter:main
 path_publisher = ros2_maritime.path_publisher:main

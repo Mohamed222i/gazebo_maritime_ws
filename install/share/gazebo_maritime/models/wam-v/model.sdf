@@ -28,7 +28,7 @@
     <collision name="top_base">
       <pose>0 -0 1.25 0 0 0</pose>
       <geometry>
-        <box><size>1.85 1 0.1" </size></box>
+        <box><size>1.85 1 0.1 </size></box>
       </geometry>
     </collision>
 
