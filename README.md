@@ -105,6 +105,28 @@ Toutes les options sont modifiables directement dans le code (`scenario = ...`).
 
 ---
 
+
+What to change on the SMC(short checklist)
+
+Lower SMC / yaw gains: reduce k_s, k_psi, k_moment (see code defaults).
+
+Increase boundary layer epsilon (e.g. 0.2–0.5) to avoid chattering.
+
+Lower k_speed / max thrust so controller cannot blast away (user said both thrust = 40 → ~1.5 m/s — use that to scale). Set max_thrust≈80–120.
+
+Enable thrust rate limiting (max_thrust_rate), e.g. 20 N/s or smaller.
+
+Check thruster signs: manually command differential thrust and verify yaw direction. If swapped, flip invert_left / invert_right.
+
+Test: ros2 topic pub /wamv/left_thrust std_msgs/msg/Float64 "{data: 40.0}" and then right. Observe motion.
+
+Start with low desired speed (e.g. 0.5 m/s) while tuning heading, then increase.
+
+Verify TF / frame: ensure odom frame and path frame match (both odom), and there is no yaw offset introduced by navsat_transform.
+
+
+
+---
 ## 📌 Script Python : `sim/smc_simulation.py
 
 ```python
