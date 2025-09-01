@@ -64,13 +64,17 @@ def generate_launch_description():
         
 
 
-        Node(
-            package='ros2_maritime',
-            executable='path_publisher',
-            name='path_publisher'
-        ),
+        #Node(
+        #    package='ros2_maritime',
+        #    executable='path_publisher',
+        #    name='path_publisher'
+        #),
 
-
+        #Node(
+        #    package='ros2_maritime',
+        #    executable='random_waypoint',
+        #    name='random_waypoint'
+        #),
 
 
         Node(

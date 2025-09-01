@@ -21,6 +21,7 @@ ros2_maritime/heading.py
 ros2_maritime/imu_covariance.py
 ros2_maritime/magnetometer_converter.py
 ros2_maritime/path_publisher.py
+ros2_maritime/random_waypoint.py
 ros2_maritime/smc_control.py
 ros2_maritime/usv_breadcrumb.py
 rviz/conf.rviz

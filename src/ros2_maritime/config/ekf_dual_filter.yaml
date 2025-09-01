@@ -22,7 +22,7 @@ ekf_filter_node_odom:
                   true,  true,  false,  # Roll, Pitch
                   false, false, false,
                   true,  true,  true,   # Angular velocity
-                  true,  true,  true]   # Linear acceleration
+                  false, false, false]   # Linear acceleration
 
     imu0_differential: false
     imu0_relative: false
@@ -194,15 +194,15 @@ ekf_filter_node_map:
 
 
 navsat_transform:
-  ros__parameters:
+  ros__parameters:  
     use_sim_time: true
     publish_tf: true
 
     frequency: 30.0
     delay: 0.0
     magnetic_declination_radians: 0.2
-    yaw_offset: 1.570796327
-    zero_altitude: false
+    yaw_offset:  0.0
+    zero_altitude: true
     broadcast_utm_transform: true
     publish_filtered_gps: true
     use_odometry_yaw: false  # Use IMU/mag for heading, not odometry
@@ -210,4 +210,4 @@ navsat_transform:
     gps_frame: wam-v/base_link/navsat_sensor
     world_frame: "map"  # Must match EKF's world_frame
     base_link_frame: "base_link"
-    child_frame_id: "base_link"
+    child_frame_id: "odom"

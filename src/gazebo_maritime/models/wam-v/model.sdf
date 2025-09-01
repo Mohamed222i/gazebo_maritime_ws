@@ -19,6 +19,7 @@
     </inertial>
 
     <visual name="base_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <mesh><uri>file:///home/pc/gazebo_maritime_ws/src/gazebo_maritime/models/wam-v/meshes/WAM-V-Base.dae</uri></mesh>
       </geometry>
@@ -377,13 +378,13 @@
         filename="gz-sim-odometry-publisher-system"
         name="gz::sim::systems::OdometryPublisher" >
           <odom_topic>odom/unfiltered</odom_topic>
-          <!-- <odom_frame>odom</odom_frame> -->
+          <odom_frame>odom</odom_frame>
           <robot_base_frame>base_link</robot_base_frame>
-          <publish_tf>false</publish_tf>
-          <!-- <tf_topic>tf</tf_topic> -->
+          <publish_tf>true</publish_tf>
+          <tf_topic>tf</tf_topic>
           <odom_publish_frequency>50</odom_publish_frequency>
           <xyz_offset>0 0 0</xyz_offset>
-          <rpy_offset>0 0 0</rpy_offset>
+          <rpy_offset>1.570796 0 0</rpy_offset>
   </plugin>
 </model>
 
