@@ -106,7 +106,7 @@ Toutes les options sont modifiables directement dans le code (`scenario = ...`).
 ---
 
 
-What to change on the SMC(short checklist)
+# What to change on the SMC(short checklist)
 
 Lower SMC / yaw gains: reduce k_s, k_psi, k_moment (see code defaults).
 
