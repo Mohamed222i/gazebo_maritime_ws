@@ -106,6 +106,37 @@ Toutes les options sont modifiables directement dans le code (`scenario = ...`).
 ---
 
 
+- If robot drifts but corrects slowly:
+
+Increase k_s by +2 (try 8).
+
+Increase k_psi by +0.2.
+
+- If robot spins / rotates in place:
+
+Decrease k_moment by 30–50%.
+
+Decrease k_s by 30–50%.
+
+Increase epsilon to 0.5.
+
+- If robot oscillates yaw rapidly (chatter):
+
+Increase epsilon.
+
+Lower k_s.
+
+Add/raise max_thrust_rate smoothing or low-pass.
+
+- If thrusters saturate often:
+
+Lower desired_speed or k_speed.
+
+Increase max_thrust only if physical thruster supports it.
+
+
+---
+
 # What to change on the SMC(short checklist)
 
 Lower SMC / yaw gains: reduce k_s, k_psi, k_moment (see code defaults).
