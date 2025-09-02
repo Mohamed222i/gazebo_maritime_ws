@@ -42,6 +42,7 @@
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/imu_covariance
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/magnetometer_converter
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/path_publisher
+/home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/path_rec
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/random_waypoint
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/smc_control
 /home/pc/gazebo_maritime_ws/install/lib/ros2_maritime/usv_breadcrumb

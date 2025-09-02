@@ -35,7 +35,9 @@ setup(
             'smc_control = ros2_maritime.smc_control:main',
             'heading = ros2_maritime.heading:main',
             'random_waypoint = ros2_maritime.random_waypoint:main',
-            'path_publisher = ros2_maritime.path_publisher:main'
+            'path_publisher = ros2_maritime.path_publisher:main',
+            'path_rec = ros2_maritime.path_rec:main'
+
         ],
     },
 )

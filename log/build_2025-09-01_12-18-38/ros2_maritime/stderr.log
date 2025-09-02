@@ -1,0 +1,5 @@
+  File "/home/pc/gazebo_maritime_ws/install/lib/python3.12/site-packages/ros2_maritime/path_publisher.py", line 11
+    self.timer = self.create_timer(1.0, self.publish _path)
+                                        ^^^^^^^^^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+

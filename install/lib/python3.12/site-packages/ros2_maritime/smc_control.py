@@ -1,273 +1,526 @@
 #!/usr/bin/env python3
-import math
+"""
+SMC WAM-V Controller (ROS2, Python)
+
+Features:
+ - Sliding Mode Controller (SMC) for waypoint/path following (2D)
+ - Distance-based lookahead target selection (smooth)
+ - Thruster mapping: surge + yaw moment -> left/right thrusts
+ - Rate-limited and clipped thruster outputs
+ - Executed path recording & publishing for RViz (/viz/actual_path)
+ - Odometry yaw compensation param (useful because SDF odom plugin applied rpy_offset = +pi/2)
+ - Conservative physical defaults derived from your SDF
+
+Default tuned parameters (physically-informed):
+ - thruster_separation = 2.05427 m (extracted from SDF)
+ - thruster_half d = 1.027135 m
+ - mass = 180 kg (for reference)
+ - Izz = 446 kg·m²
+ - desired_speed = 0.6 m/s
+ - max_thrust = 140.0 (safe)
+ - max_thrust_rate = 40.0 N/s
+ - k_speed = 120.0
+ - k_psi = 0.6
+ - k_s = 6.0
+ - epsilon = 0.3
+ - k_moment = 5.0
+ - lookahead_distance = 4.0 m
+ - odom_yaw_compensation = -1.570796 (subtract pi/2 from raw odom yaw)
+"""
+
 import rclpy
 from rclpy.node import Node
-from rclpy.time import Time
-from nav_msgs.msg import Odometry, Path
-from geometry_msgs.msg import PoseStamped
+from rclpy.qos import QoSProfile
+from nav_msgs.msg import Path, Odometry
+from geometry_msgs.msg import PoseStamped, Point, Quaternion, Vector3
+from std_msgs.msg import Float64
+from visualization_msgs.msg import Marker
+from std_srvs.srv import Empty
+import math
+from typing import List, Tuple
 from std_msgs.msg import Float64
 
 
-def wrap_to_pi(a):
+
+def wrap_to_pi(a: float) -> float:
     return (a + math.pi) % (2.0 * math.pi) - math.pi
 
+def sign_sat(s: float) -> float:
+    if s > 0.0:
+        return 1.0
+    elif s < 0.0:
+        return -1.0
+    else:
+        return 0.0
 
-def sat(x):
-    return max(-1.0, min(1.0, x))
-
-
-def yaw_from_quat(q):
-    # ZYX yaw from quaternion
-    siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
-    cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
-    return math.atan2(siny_cosp, cosy_cosp)
-
-
-class SMCUSV(Node):
+class SMCWamV(Node):
     def __init__(self):
         super().__init__('smc_control')
 
-        # Parameters (tune these)
-        self.declare_parameter('control_rate_hz', 20.0)
-        self.declare_parameter('reference_path_topic', '/reference_path')
+        # --- declare parameters (defaults chosen from SDF + safe tuning) ---
         self.declare_parameter('odom_topic', '/odometry/filtered')
+        self.declare_parameter('path_topic', '/reference_path')
+        self.declare_parameter('frame_id', 'odom')
+        self.declare_parameter('control_rate', 20.0)
+
+        # Physical params from SDF
+        self.declare_parameter('mass', 180.0)
+        self.declare_parameter('Izz', 446.0)
+        self.declare_parameter('thruster_separation', 2.05427)  # meters (from SDF)
+        self.declare_parameter('thruster_half', 1.027135)      # d
+
+        # Actuation + safety
         self.declare_parameter('left_thrust_topic', '/wamv/left_thrust')
         self.declare_parameter('right_thrust_topic', '/wamv/right_thrust')
+        self.declare_parameter('max_thrust', 140.0)
+        self.declare_parameter('max_thrust_rate', 25.0)   # per second
+        self.declare_parameter('invert_left', False)
+        self.declare_parameter('invert_right', False)
 
-        # Speed control
-        self.declare_parameter('v_ref', 1.0)        # desired surge speed [m/s]
-        self.declare_parameter('v_ref_max', 2.0)    # maximum speed corresponding to max thrust
-        self.declare_parameter('k_v', 20.0)         # speed SMC gain
-        self.declare_parameter('phi_v', 0.2)        # speed boundary layer
+        # Controller defaults (conservative / physically-informed)
+        self.declare_parameter('desired_speed', 0.55)
+        self.declare_parameter('k_speed', 110.0)
+        self.declare_parameter('k_psi', 0.8)
+        self.declare_parameter('k_s', 4.5)
+        self.declare_parameter('epsilon', 0.6)
+        self.declare_parameter('k_moment', 5.0)
+        self.declare_parameter('lambda_ct', 0.35)
 
-        # Yaw / path-following control
-        self.declare_parameter('lookahead_dist', 3.0)  # path lookahead [m]
-        self.declare_parameter('k_ct', 1.0)            # cross-track weight in surface
-        self.declare_parameter('k_s', 0.8)             # switching gain for yaw surface
-        self.declare_parameter('k_d', 0.3)             # damping on yaw rate
-        self.declare_parameter('phi_yaw', 0.1)         # yaw boundary layer
+        # Lookahead
+        self.declare_parameter('lookahead_distance', 2.5)
 
-        # Thrust mapping & limits
-        self.declare_parameter('thrust_min', 0.0)
-        self.declare_parameter('thrust_max', 100.0)
-        self.declare_parameter('diff_gain', 30.0)      # yaw-to-differential thrust scaling
-        self.declare_parameter('max_diff', 80.0)       # limit differential to avoid inverted thrusts
+        # Odometry compensation (SDF odom rpy_offset = +pi/2); set 0 to disable
+        self.declare_parameter('odom_yaw_compensation', -1.570796)  # subtract π/2 by default
 
-        # estimation/filtering params (for vx/vy/omega when twist unreliable)
-        self.declare_parameter('v_est_alpha', 0.3)     # low-pass alpha for velocity estimate (0..1)
-        self.declare_parameter('yaw_est_alpha', 0.3)   # low-pass for yaw rate estimate (0..1)
+        # Executed path publishing
+        self.declare_parameter('executed_path_topic', '/viz/actual_path')
+        self.declare_parameter('executed_path_frame', 'map')   # stamp published path in this frame
+        self.declare_parameter('executed_path_max_points', 2000)
+        self.declare_parameter('executed_path_publish_rate', 5.0)
+        self.declare_parameter('publish_executed_marker', True)
+        self.declare_parameter('executed_marker_topic', '/smc/executed_path_marker')
 
-        # Read params
-        self.rate_hz = float(self.get_parameter('control_rate_hz').value)
-        self.path_topic = self.get_parameter('reference_path_topic').value
-        self.odom_topic = self.get_parameter('odom_topic').value
-        self.left_topic = self.get_parameter('left_thrust_topic').value
-        self.right_topic = self.get_parameter('right_thrust_topic').value
+        # --- read params into attributes ---
+        self.odom_topic = self.get_parameter('odom_topic').get_parameter_value().string_value
+        self.path_topic = self.get_parameter('path_topic').get_parameter_value().string_value
+        self.frame_id = self.get_parameter('frame_id').get_parameter_value().string_value
+        self.rate_hz = float(self.get_parameter('control_rate').get_parameter_value().double_value)
 
-        self.v_ref = float(self.get_parameter('v_ref').value)
-        self.v_ref_max = float(self.get_parameter('v_ref_max').value)
-        self.k_v = float(self.get_parameter('k_v').value)
-        self.phi_v = float(self.get_parameter('phi_v').value)
+        self.mass = float(self.get_parameter('mass').get_parameter_value().double_value)
+        self.Izz = float(self.get_parameter('Izz').get_parameter_value().double_value)
+        self.thruster_separation = float(self.get_parameter('thruster_separation').get_parameter_value().double_value)
+        self.thruster_half = float(self.get_parameter('thruster_half').get_parameter_value().double_value)
 
-        self.Ld = float(self.get_parameter('lookahead_dist').value)
-        self.k_ct = float(self.get_parameter('k_ct').value)
-        self.k_s = float(self.get_parameter('k_s').value)
-        self.k_d = float(self.get_parameter('k_d').value)
-        self.phi_yaw = float(self.get_parameter('phi_yaw').value)
+        self.left_topic = self.get_parameter('left_thrust_topic').get_parameter_value().string_value
+        self.right_topic = self.get_parameter('right_thrust_topic').get_parameter_value().string_value
+        self.max_thrust = float(self.get_parameter('max_thrust').get_parameter_value().double_value)
+        self.max_thrust_rate = float(self.get_parameter('max_thrust_rate').get_parameter_value().double_value)
+        self.invert_left = bool(self.get_parameter('invert_left').get_parameter_value().bool_value)
+        self.invert_right = bool(self.get_parameter('invert_right').get_parameter_value().bool_value)
 
-        self.u_min = float(self.get_parameter('thrust_min').value)
-        self.u_max = float(self.get_parameter('thrust_max').value)
-        self.diff_gain = float(self.get_parameter('diff_gain').value)
-        self.max_diff = float(self.get_parameter('max_diff').value)
+        self.desired_speed = float(self.get_parameter('desired_speed').get_parameter_value().double_value)
+        self.k_speed = float(self.get_parameter('k_speed').get_parameter_value().double_value)
+        self.k_psi = float(self.get_parameter('k_psi').get_parameter_value().double_value)
+        self.k_s = float(self.get_parameter('k_s').get_parameter_value().double_value)
+        self.epsilon = float(self.get_parameter('epsilon').get_parameter_value().double_value)
+        self.k_moment = float(self.get_parameter('k_moment').get_parameter_value().double_value)
+        self.lambda_ct = float(self.get_parameter('lambda_ct').get_parameter_value().double_value)
 
-        self.v_est_alpha = float(self.get_parameter('v_est_alpha').value)
-        self.yaw_est_alpha = float(self.get_parameter('yaw_est_alpha').value)
+        self.lookahead_distance = float(self.get_parameter('lookahead_distance').get_parameter_value().double_value)
+        self.odom_yaw_compensation = float(self.get_parameter('odom_yaw_compensation').get_parameter_value().double_value)
 
-        # IO
-        self.left_pub = self.create_publisher(Float64, self.left_topic, 10)
-        self.right_pub = self.create_publisher(Float64, self.right_topic, 10)
-        self.path_sub = self.create_subscription(Path, self.path_topic, self.path_cb, 10)
-        self.odom_sub = self.create_subscription(Odometry, self.odom_topic, self.odom_cb, 10)
+        self.executed_path_topic = self.get_parameter('executed_path_topic').get_parameter_value().string_value
+        self.executed_path_frame = self.get_parameter('executed_path_frame').get_parameter_value().string_value
+        self.executed_path_max_points = int(self.get_parameter('executed_path_max_points').get_parameter_value().integer_value)
+        self.executed_path_publish_rate = float(self.get_parameter('executed_path_publish_rate').get_parameter_value().double_value)
+        self.publish_executed_marker = bool(self.get_parameter('publish_executed_marker').get_parameter_value().bool_value)
+        self.executed_marker_topic = self.get_parameter('executed_marker_topic').get_parameter_value().string_value
 
-        # State
-        self.path_pts = []   # list of (x, y)
-        self.have_odom = False
-        self.x = self.y = 0.0
-        self.yaw = 0.0
-        # velocity/yawrate estimated from finite diff of pose (not trusting twist)
-        self.v_est = 0.0
-        self.omega_est = 0.0
+        # --- internal state ---
+        self.path_points: List[Tuple[float,float]] = []
+        self.path_received = False
+        self.current_x = 0.0
+        self.current_y = 0.0
+        self.current_yaw = 0.0
+        self.current_u = 0.0
+        self.odom_received = False
 
-        # previous state for finite difference
-        self._prev_time = None
-        self._prev_x = None
-        self._prev_y = None
-        self._prev_yaw = None
+        # executed path buffer
+        self.executed_path = Path()
+        self.executed_path.header.frame_id = self.executed_path_frame
+        self.executed_path.poses = []
 
-        # Control loop
-        dt = 1.0 / max(1.0, self.rate_hz)
-        self.timer = self.create_timer(dt, self.control_step)
+        # last commands (for rate limiting)
+        self.last_left_cmd = 0.0
+        self.last_right_cmd = 0.0
+        self.last_time = self.get_clock().now().nanoseconds * 1e-9
 
-        self.get_logger().info(
-            f'SMC controller running at {self.rate_hz} Hz. '
-            f'Path: {self.path_topic}, Odom: {self.odom_topic}'
-        )
+        qos = QoSProfile(depth=10)
+        # subscribers
+        self.create_subscription(Path, self.path_topic, self.path_cb, qos)
+        self.create_subscription(Odometry, self.odom_topic, self.odom_cb, qos)
 
+        # publishers
+        self.left_pub = self.create_publisher(Float64, self.left_topic, qos)
+        self.right_pub = self.create_publisher(Float64, self.right_topic, qos)
+        self.target_pub = self.create_publisher(PoseStamped, '/smc/target_point', qos)
+        self.marker_pub = self.create_publisher(Marker, '/smc/control_marker', qos)
+        self.executed_pub = self.create_publisher(Path, self.executed_path_topic, qos)
+        self.executed_marker_pub = self.create_publisher(Marker, self.executed_marker_topic, qos) if self.publish_executed_marker else None
+
+        # service to clear executed path
+        self.create_service(Empty, '/smc/clear_executed_path', self.clear_executed_path_cb)
+
+        # timers
+        self.control_timer = self.create_timer(1.0 / self.rate_hz, self.control_loop)
+        self.exec_pub_timer = self.create_timer(1.0 / self.executed_path_publish_rate, self.publish_executed_path)
+
+        self.get_logger().info('SMC WAM-V controller started (physically-informed defaults loaded).')
+
+
+
+        # debug publishers for plotting / tuning
+        self.pub_s = self.create_publisher(Float64, '/smc/debug/s', 10)
+        self.pub_yaw_err = self.create_publisher(Float64, '/smc/debug/yaw_err', 10)
+        self.pub_cross_track = self.create_publisher(Float64, '/smc/debug/cross_track', 10)
+        self.pub_switching = self.create_publisher(Float64, '/smc/debug/switching', 10)
+        self.pub_r_cmd = self.create_publisher(Float64, '/smc/debug/r_cmd', 10)
+        self.pub_F_total = self.create_publisher(Float64, '/smc/debug/F_total', 10)
+        self.pub_M_cmd = self.create_publisher(Float64, '/smc/debug/M_cmd', 10)
+        self.pub_left_cmd = self.create_publisher(Float64, '/smc/debug/left_cmd', 10)
+        self.pub_right_cmd = self.create_publisher(Float64, '/smc/debug/right_cmd', 10)
+        self.pub_current_u = self.create_publisher(Float64, '/smc/debug/current_u', 10)
+        self.pub_desired_speed = self.create_publisher(Float64, '/smc/debug/desired_speed', 10)
+        self.pub_offtrack = self.create_publisher(Float64, '/smc/debug/offtrack', 10)
+        self.pub_lookahead = self.create_publisher(Float64, '/smc/debug/lookahead', 10)
+        self.pub_epsilon = self.create_publisher(Float64, '/smc/debug/eps', 10)
+        
+
+
+
+
+
+
+    # ---------------- callbacks ----------------
     def path_cb(self, msg: Path):
-        # store path points (x,y)
-        self.path_pts = [(p.pose.position.x, p.pose.position.y) for p in msg.poses]
-        if len(self.path_pts) < 2:
-            self.get_logger().warning('Received path with fewer than 2 points.')
+        pts = []
+        for ps in msg.poses:
+            pts.append((ps.pose.position.x, ps.pose.position.y))
+        if len(pts) >= 2:
+            self.path_points = pts
+            self.path_received = True
+            self.get_logger().debug(f"Received reference path with {len(pts)} pts (frame={msg.header.frame_id})")
+        else:
+            self.get_logger().warn('Reference path contains fewer than 2 points.')
 
     def odom_cb(self, msg: Odometry):
-        # update absolute pose
-        # try to use header stamp for dt; fallback to node time
-        try:
-            t = Time.from_msg(msg.header.stamp).nanoseconds / 1e9
-        except Exception:
-            t = self.get_clock().now().nanoseconds / 1e9
+        # extract pose and apply optional yaw compensation (to fix rpy_offset in SDF)
+        self.current_x = msg.pose.pose.position.x
+        self.current_y = msg.pose.pose.position.y
+        q = msg.pose.pose.orientation
+        # quaternion -> yaw
+        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        raw_yaw = math.atan2(siny_cosp, cosy_cosp)
+        # apply compensation (add value; default is -pi/2 because SDF odom plugin added +pi/2)
+        self.current_yaw = wrap_to_pi(raw_yaw + self.odom_yaw_compensation)
+        # linear speed (forward in body frame)
+        self.current_u = msg.twist.twist.linear.x
+        self.odom_received = True
 
-        x = msg.pose.pose.position.x
-        y = msg.pose.pose.position.y
-        yaw = yaw_from_quat(msg.pose.pose.orientation)
+        # record executed path (PoseStamped)
+        ps = PoseStamped()
+        ps.header.stamp = self.get_clock().now().to_msg()
+        ps.header.frame_id = self.executed_path_frame
+        ps.pose = msg.pose.pose
+        # optionally fix pose orientation yaw to compensated yaw (so robot arrow in RViz matches)
+        # recompute quaternion for compensated yaw:
+        cz = math.sin(self.current_yaw / 2.0)
+        cw = math.cos(self.current_yaw / 2.0)
+        ps.pose.orientation.z = cz
+        ps.pose.orientation.w = cw
+        self.executed_path.poses.append(ps)
+        if len(self.executed_path.poses) > self.executed_path_max_points:
+            self.executed_path.poses = self.executed_path.poses[-self.executed_path_max_points:]
 
-        # if we have previous pose/time, compute finite-difference derivatives
-        if self._prev_time is not None and t > self._prev_time + 1e-6:
-            dt = t - self._prev_time
-            dx = x - self._prev_x
-            dy = y - self._prev_y
-            # distance-based speed estimate (m/s)
-            v_new = math.hypot(dx, dy) / dt
-            # yaw rate (wrap yaw difference)
-            dyaw = wrap_to_pi(yaw - self._prev_yaw)
-            omega_new = dyaw / dt
+    # clear executed path service
+    def clear_executed_path_cb(self, req, res):
+        self.executed_path.poses = []
+        self.get_logger().info('Cleared executed path buffer.')
+        return res
 
-            # low-pass filter estimates
-            self.v_est = self.v_est_alpha * v_new + (1.0 - self.v_est_alpha) * self.v_est
-            self.omega_est = self.yaw_est_alpha * omega_new + (1.0 - self.yaw_est_alpha) * self.omega_est
+    # ---------------- utility: distance-based lookahead ----------------
+    def find_projection_and_along(self):
+        # returns (proj_x, proj_y, seg_idx, proj_dist)
+        if len(self.path_points) < 2:
+            return (self.current_x, self.current_y, 0, 0.0)
+        best_seg = 0
+        best_dist = float('inf')
+        best_proj = (self.path_points[0][0], self.path_points[0][1])
+        best_t = 0.0
+        for i in range(len(self.path_points)-1):
+            x1,y1 = self.path_points[i]
+            x2,y2 = self.path_points[i+1]
+            dx = x2 - x1; dy = y2 - y1
+            seg_len2 = dx*dx + dy*dy
+            if seg_len2 == 0:
+                continue
+            t = ((self.current_x - x1)*dx + (self.current_y - y1)*dy) / seg_len2
+            t_clamped = max(0.0, min(1.0, t))
+            proj_x = x1 + t_clamped * dx
+            proj_y = y1 + t_clamped * dy
+            d = math.hypot(self.current_x - proj_x, self.current_y - proj_y)
+            if d < best_dist:
+                best_dist = d
+                best_seg = i
+                best_proj = (proj_x, proj_y)
+                best_t = t_clamped
+        return (best_proj[0], best_proj[1], best_seg, best_dist)
+
+    def compute_target_along_lookahead(self):
+        # compute along coordinate of projection then add lookahead_distance to find target point
+        if len(self.path_points) < 2:
+            return (self.current_x, self.current_y, self.current_yaw, 0.0)
+
+        proj_x, proj_y, seg_idx, proj_dist = self.find_projection_and_along()
+
+        # compute along coordinate up to projection
+        along = 0.0
+        for i in range(seg_idx):
+            x1,y1 = self.path_points[i]; x2,y2 = self.path_points[i+1]
+            along += math.hypot(x2-x1, y2-y1)
+        # add projection distance along its segment
+        x1,y1 = self.path_points[seg_idx]; x2,y2 = self.path_points[seg_idx+1]
+        seg_len = math.hypot(x2-x1, y2-y1)
+        # compute projection t on this segment
+        if seg_len > 1e-9:
+            t = ((proj_x - x1)* (x2-x1) + (proj_y - y1)*(y2-y1)) / (seg_len*seg_len)
+            t = max(0.0, min(1.0, t))
+            along += t * seg_len
+
+        target_along = along + self.lookahead_distance
+
+        # compute segment lengths
+        seg_lengths = [math.hypot(self.path_points[i+1][0]-self.path_points[i][0],
+                                  self.path_points[i+1][1]-self.path_points[i][1])
+                       for i in range(len(self.path_points)-1)]
+        total_len = sum(seg_lengths)
+        if total_len <= 0.0:
+            return (self.path_points[-1][0], self.path_points[-1][1], 0.0, proj_dist)
+
+        if target_along >= total_len:
+            # clamp to last point
+            tx,ty = self.path_points[-1]
+            prevx,prevy = self.path_points[-2]
+            path_yaw = math.atan2(ty-prevy, tx-prevx)
+            return (tx, ty, path_yaw, proj_dist)
+
+        # find the segment containing target_along
+        accum = 0.0
+        for i, L in enumerate(seg_lengths):
+            if accum + L >= target_along:
+                seg_offset = (target_along - accum) / max(1e-9, L)
+                x1,y1 = self.path_points[i]; x2,y2 = self.path_points[i+1]
+                tx = x1 + seg_offset * (x2-x1)
+                ty = y1 + seg_offset * (y2-y1)
+                path_yaw = math.atan2(y2-y1, x2-x1)
+                return (tx, ty, path_yaw, proj_dist)
+            accum += L
+
+        # fallback
+        tx,ty = self.path_points[-1]
+        prevx,prevy = self.path_points[-2]
+        path_yaw = math.atan2(ty-prevy, tx-prevx)
+        return (tx, ty, path_yaw, proj_dist)
+
+    # ---------------- publish executed path ----------------
+    def publish_executed_path(self):
+        if len(self.executed_path.poses) == 0:
+            return
+        self.executed_path.header.stamp = self.get_clock().now().to_msg()
+        self.executed_pub.publish(self.executed_path)
+
+        if self.executed_marker_pub is not None:
+            mk = Marker()
+            mk.header.frame_id = self.executed_path_frame
+            mk.header.stamp = self.get_clock().now().to_msg()
+            mk.ns = 'executed_path'
+            mk.id = 0
+            mk.type = Marker.LINE_STRIP
+            mk.action = Marker.ADD
+            mk.scale = Vector3(x=0.12, y=0.0, z=0.0)
+            mk.color.a = 1.0
+            mk.color.r = 0.9
+            mk.color.g = 0.2
+            mk.color.b = 0.2
+            mk.points = []
+            for p in self.executed_path.poses:
+                pt = Point()
+                pt.x = p.pose.position.x
+                pt.y = p.pose.position.y
+                pt.z = p.pose.position.z if hasattr(p.pose.position, 'z') else 0.0
+                mk.points.append(pt)
+            self.executed_marker_pub.publish(mk)
+
+    # ---------------- core SMC control loop ----------------
+    def control_loop(self):
+        if not (self.odom_received and self.path_received and len(self.path_points) >= 2):
+            return
+
+        # get lookahead target and projection distance (offtrack)
+        tx, ty, path_yaw, offtrack = self.compute_target_along_lookahead()
+
+        # heading error: desired - current
+        yaw_err = wrap_to_pi(path_yaw - self.current_yaw)
+
+        # compute cross-track approx using projection onto local tangent (signed)
+        vx = self.current_x - tx
+        vy = self.current_y - ty
+        cross_track = -math.sin(path_yaw) * vx + math.cos(path_yaw) * vy
+
+        # sliding variable
+        s = yaw_err + self.lambda_ct * cross_track
+
+        # switching term with boundary layer
+        if abs(s) > self.epsilon:
+            switching = self.k_s * sign_sat(s)
         else:
-            # first sample: set estimates to zero or to twist if available
-            # If odom.twist is present and looks sane, we could use it as fallback.
-            try:
-                v_twist = math.hypot(msg.twist.twist.linear.x, msg.twist.twist.linear.y)
-                omega_twist = msg.twist.twist.angular.z
-                self.v_est = v_twist
-                self.omega_est = omega_twist
-            except Exception:
-                pass
+            switching = self.k_s * (s / self.epsilon)
 
-        # store current as previous
-        self._prev_time = t
-        self._prev_x = x
-        self._prev_y = y
-        self._prev_yaw = yaw
+        # desired yaw-rate like command (rad/s)
+        r_cmd = - self.k_psi * yaw_err - switching
 
-        # publish state
-        self.x = x
-        self.y = y
-        self.yaw = yaw
-        self.have_odom = True
+        # surge: simple P controller mapping speed error to thrust (units of node's thrust command)
+        speed_err = self.desired_speed - self.current_u
+        F_total = self.k_speed * speed_err
 
-    def control_step(self):
-        if not self.have_odom:
-            return
-        if len(self.path_pts) < 2:
-            return
-
-        # 1) choose closest point and lookahead target by accumulated arc-length
-        ix_closest = self._closest_index(self.x, self.y, self.path_pts)
-        ix_target = self._lookahead_index(ix_closest, self.Ld)
-        px, py = self.path_pts[ix_closest]
-        tx, ty = self.path_pts[ix_target]
-
-        # reference tangent and desired heading (from closest->target or from segment)
-        dx = tx - px
-        dy = ty - py
-        if abs(dx) < 1e-9 and abs(dy) < 1e-9:
-            return
-        psi_d = math.atan2(dy, dx)
-
-        # 2) errors
-        e_psi = wrap_to_pi(psi_d - self.yaw)
-
-        # signed cross-track distance to the line through (px,py)->(tx,ty)
-        t_norm = math.hypot(dx, dy)
-        tx_h = dx / t_norm
-        ty_h = dy / t_norm
-        ex = self.x - px
-        ey = self.y - py
-        e_ct = (-ty_h) * ex + (tx_h) * ey  # left-positive signed distance
-
-        # 3) Sliding surfaces and controls
-        # Speed control (surge) — use estimated speed from finite difference
-        v = float(self.v_est)
-        s_v = (v - self.v_ref)  # drive to zero
-        nominal_thrust = self._map_thrust(self.v_ref)
-        u_surge = nominal_thrust - self.k_v * sat(s_v / max(1e-6, self.phi_v))
-        u_surge = self._clamp(self.u_min, self.u_max, u_surge)
-
-        # Yaw/path control (combine heading and cross-track into one surface)
-        s_yaw = e_psi + self.k_ct * math.atan2(e_ct, max(1e-3, self.Ld))
-        u_yaw = - self.k_s * sat(s_yaw / max(1e-6, self.phi_yaw)) - self.k_d * float(self.omega_est)
-
-        # Map yaw control to differential thrust
-        diff = self.diff_gain * u_yaw
-        # clamp differential to avoid huge opposite-sign thrusts
-        diff = max(-self.max_diff, min(self.max_diff, diff))
-
-        left_cmd = self._clamp(self.u_min, self.u_max, u_surge - diff)
-        right_cmd = self._clamp(self.u_min, self.u_max, u_surge + diff)
-
-        # 4) Publish commands
-        self.left_pub.publish(Float64(data=float(left_cmd)))
-        self.right_pub.publish(Float64(data=float(right_cmd)))
-
-    def _closest_index(self, x, y, pts):
-        best_i = 0
-        best_d2 = float('inf')
-        for i, (px, py) in enumerate(pts):
-            d2 = (x - px) * (x - px) + (y - py) * (y - py)
-            if d2 < best_d2:
-                best_i, best_d2 = i, d2
-        return best_i
-
-    def _lookahead_index(self, idx_start, lookahead_dist):
-        # accumulate along path until distance >= lookahead_dist
-        if idx_start >= len(self.path_pts) - 1:
-            return idx_start
-        acc = 0.0
-        last_x, last_y = self.path_pts[idx_start]
-        for i in range(idx_start + 1, len(self.path_pts)):
-            x_i, y_i = self.path_pts[i]
-            seg = math.hypot(x_i - last_x, y_i - last_y)
-            acc += seg
-            last_x, last_y = x_i, y_i
-            if acc >= lookahead_dist:
-                return i
-        # if not enough length, return last point
-        return len(self.path_pts) - 1
-
-    def _map_thrust(self, v_ref):
-        # Linear feedforward: maps v_ref in [0, v_ref_max] to thrust in [u_min, u_max]
-        v_ref_max = max(1e-3, float(self.v_ref_max))
-        frac = max(0.0, min(1.0, v_ref / v_ref_max))
-        return self.u_min + frac * (self.u_max - self.u_min)
-
-    @staticmethod
-    def _clamp(a, b, x):
-        lo, hi = (a, b) if a <= b else (b, a)
-        return max(lo, min(hi, x))
+        # yaw moment command
+        M_cmd = self.k_moment * r_cmd
 
 
-def main():
-    rclpy.init()
-    node = SMCUSV()
+
+        # safety limits (insert after r_cmd and M_cmd computed)
+        r_cmd_limit = 2.0   # rad/s (safe)
+        M_cmd_limit = 80.0  # N*m (safe-ish in sim)
+        
+        # clamp r_cmd
+        if r_cmd > r_cmd_limit:
+            r_cmd = r_cmd_limit
+        elif r_cmd < -r_cmd_limit:
+            r_cmd = -r_cmd_limit
+        
+        # recompute M_cmd from (possibly) clamped r_cmd
+        M_cmd = self.k_moment * r_cmd
+        # clamp M_cmd just in case
+        if M_cmd > M_cmd_limit:
+            M_cmd = M_cmd_limit
+        elif M_cmd < -M_cmd_limit:
+            M_cmd = -M_cmd_limit
+
+
+
+        # thruster mapping: F_total = FL + FR ; M_cmd = (FR - FL) * d
+        d = self.thruster_half
+        if abs(d) < 1e-6:
+            d = 1.0
+        delta = M_cmd / d  # FR - FL
+        left_cmd = (F_total / 2.0) - (delta / 2.0)
+        right_cmd = (F_total / 2.0) + (delta / 2.0)
+
+        # apply inversion flags
+        if self.invert_left:
+            left_cmd = -left_cmd
+        if self.invert_right:
+            right_cmd = -right_cmd
+
+        # clip to max thrust
+        left_cmd = max(-self.max_thrust, min(self.max_thrust, left_cmd))
+        right_cmd = max(-self.max_thrust, min(self.max_thrust, right_cmd))
+
+        # rate limit thrusters
+        now = self.get_clock().now().nanoseconds * 1e-9
+        dt = max(1e-6, now - self.last_time)
+        max_delta = self.max_thrust_rate * dt
+        left_cmd = self.last_left_cmd + max(-max_delta, min(max_delta, left_cmd - self.last_left_cmd))
+        right_cmd = self.last_right_cmd + max(-max_delta, min(max_delta, right_cmd - self.last_right_cmd))
+        self.last_time = now
+        self.last_left_cmd = left_cmd
+        self.last_right_cmd = right_cmd
+
+        # publish thruster commands
+        lmsg = Float64(); rmsg = Float64()
+        lmsg.data = float(left_cmd); rmsg.data = float(right_cmd)
+        self.left_pub.publish(lmsg)
+        self.right_pub.publish(rmsg)
+
+        # publish a target pose for RViz
+        ps = PoseStamped()
+        ps.header.stamp = self.get_clock().now().to_msg()
+        ps.header.frame_id = self.frame_id
+        ps.pose.position.x = float(tx)
+        ps.pose.position.y = float(ty)
+        ps.pose.position.z = 0.0
+        cz = math.sin(path_yaw/2.0); cw = math.cos(path_yaw/2.0)
+        ps.pose.orientation = Quaternion(x=0.0, y=0.0, z=cz, w=cw)
+        self.target_pub.publish(ps)
+
+        # publish control marker (arrow) indicating yaw moment
+        mk = Marker()
+        mk.header.frame_id = self.frame_id
+        mk.header.stamp = self.get_clock().now().to_msg()
+        mk.ns = 'smc'
+        mk.id = 0
+        mk.type = Marker.ARROW
+        mk.action = Marker.ADD
+        mk.pose.position.x = self.current_x
+        mk.pose.position.y = self.current_y
+        mk.pose.position.z = 0.2
+        mk.pose.orientation = Quaternion(x=0.0,y=0.0,z=math.sin(self.current_yaw/2.0), w=math.cos(self.current_yaw/2.0))
+        length = max(0.2, min(3.0, abs(M_cmd) / 10.0))
+        mk.scale = Vector3(x=length, y=0.07, z=0.07)
+        mk.color.a = 1.0
+        mk.color.r = 1.0 if M_cmd >= 0 else 0.2
+        mk.color.g = 0.2 if M_cmd >= 0 else 1.0
+        mk.color.b = 0.2
+        self.marker_pub.publish(mk)
+
+        # (optional) light debug logging
+        self.get_logger().debug(f"s={s:.3f}, yaw_err={yaw_err:.3f}, ct={cross_track:.3f}, F={F_total:.1f}, M={M_cmd:.1f}, L={left_cmd:.1f}, R={right_cmd:.1f}")
+
+
+
+        # Publish debug floats for plotting
+        msg = Float64()
+        msg.data = float(s); self.pub_s.publish(msg)
+
+        msg.data = float(yaw_err); self.pub_yaw_err.publish(msg)
+        msg.data = float(cross_track); self.pub_cross_track.publish(msg)
+        msg.data = float(switching); self.pub_switching.publish(msg)
+        msg.data = float(r_cmd); self.pub_r_cmd.publish(msg)
+        msg.data = float(F_total); self.pub_F_total.publish(msg)
+        msg.data = float(M_cmd); self.pub_M_cmd.publish(msg)
+        msg.data = float(left_cmd); self.pub_left_cmd.publish(msg)
+        msg.data = float(right_cmd); self.pub_right_cmd.publish(msg)
+        msg.data = float(self.current_u); self.pub_current_u.publish(msg)
+        msg.data = float(self.desired_speed); self.pub_desired_speed.publish(msg)
+        msg.data = float(offtrack); self.pub_offtrack.publish(msg)
+        msg.data = float(self.lookahead_distance); self.pub_lookahead.publish(msg)
+        msg.data = float(self.epsilon); self.pub_epsilon.publish(msg)
+
+
+
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = SMCWamV()
     try:
         rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
     finally:
         node.destroy_node()
         rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

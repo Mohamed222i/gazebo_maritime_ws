@@ -64,11 +64,13 @@ def generate_launch_description():
         
 
 
-        #Node(
-        #    package='ros2_maritime',
-        #    executable='path_publisher',
-        #    name='path_publisher'
-        #),
+        Node(
+            package='ros2_maritime',
+            executable='path_publisher',
+            name='path_publisher'
+        ),
+
+
 
         #Node(
         #    package='ros2_maritime',
@@ -137,7 +139,7 @@ def generate_launch_description():
         #        ('/gps/fix', '/sensor/gps'),
         #        ('/imu/data', '/sensor/imu'), 
         #        ('/odometry/filtered', '/odometry/filtered')  
-        #    ]
+        #    ]path_rec
         #),
 
 
@@ -186,7 +188,7 @@ def generate_launch_description():
         #    executable='smc_control',
         #    name='smc_control'
         #),
-
+#
 
         Node(
             package='ros2_maritime',
