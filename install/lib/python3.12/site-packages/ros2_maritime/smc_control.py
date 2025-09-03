@@ -72,25 +72,25 @@ class SMCWamV(Node):
         # Actuation + safety
         self.declare_parameter('left_thrust_topic', '/wamv/left_thrust')
         self.declare_parameter('right_thrust_topic', '/wamv/right_thrust')
-        self.declare_parameter('max_thrust', 140.0)
-        self.declare_parameter('max_thrust_rate', 25.0)   # per second
+        self.declare_parameter('max_thrust', 200.0)
+        self.declare_parameter('max_thrust_rate', 100.0)   # per second
         self.declare_parameter('invert_left', False)
         self.declare_parameter('invert_right', False)
 
         # Controller defaults (conservative / physically-informed)
-        self.declare_parameter('desired_speed', 0.55)
-        self.declare_parameter('k_speed', 110.0)
-        self.declare_parameter('k_psi', 0.8)
-        self.declare_parameter('k_s', 4.5)
-        self.declare_parameter('epsilon', 0.6)
-        self.declare_parameter('k_moment', 5.0)
-        self.declare_parameter('lambda_ct', 0.35)
+        self.declare_parameter('desired_speed', 1.5)
+        self.declare_parameter('k_speed', 120.0)
+        self.declare_parameter('k_psi', 8.0)
+        self.declare_parameter('k_s', 10.0)
+        self.declare_parameter('epsilon', 0.2)
+        self.declare_parameter('k_moment', 3.0)
+        self.declare_parameter('lambda_ct', 1.0)
 
         # Lookahead
-        self.declare_parameter('lookahead_distance', 2.5)
+        self.declare_parameter('lookahead_distance', 0.2)
 
         # Odometry compensation (SDF odom rpy_offset = +pi/2); set 0 to disable
-        self.declare_parameter('odom_yaw_compensation', -1.570796)  # subtract π/2 by default
+        self.declare_parameter('odom_yaw_compensation', 0.0)  # subtract π/2 by default
 
         # Executed path publishing
         self.declare_parameter('executed_path_topic', '/viz/actual_path')

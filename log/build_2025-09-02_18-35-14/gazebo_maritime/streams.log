@@ -1,0 +1,5 @@
+[0.014s] Invoking command in '/home/pc/gazebo_maritime_ws/build/gazebo_maritime': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/pc/gazebo_maritime_ws/build/gazebo_maritime -- -j16 -l16
+[0.063s] [ 25%] Built target Waves
+[0.085s] [ 50%] Built target WaveVisual
+[0.086s] [ 75%] Built target Surface
+[0.086s] [100%] Built target PublisherPlugin

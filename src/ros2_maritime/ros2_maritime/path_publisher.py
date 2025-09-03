@@ -17,17 +17,13 @@ class PathPublisher(Node):
         # Define waypoints (e.g., for a dam survey lawnmower pattern)
         self.waypoints = np.array([
             (0.0, 0.0),
-            (100.0, 0.0),
-            (100.0, 20.0),
-            (0.0, 20.0),
-            (0.0, 40.0),
+            (10.0, 10.0),
+            (20.0, 20.0),
+            (80.0, 60.0),
             (100.0, 40.0),
-            (100.0, 60.0),
-            (0.0, 60.0),
-            (0.0, 80.0),
-            (100.0, 80.0),
-            (100.0, 100.0),
-            (0.0, 100.0)
+            (140.0, 40.0)
+
+
         ])
 
     def publish_paths(self):
@@ -109,14 +105,12 @@ if __name__ == '__main__':
     main()
 
 
-
-
+'''
 
 
 
 #below is the cubic B spline method
 
-'''
 
 
 #!/usr/bin/env python3
@@ -209,5 +203,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-    
-    '''
+'''
