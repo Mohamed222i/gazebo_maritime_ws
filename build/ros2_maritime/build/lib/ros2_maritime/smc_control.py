@@ -73,21 +73,21 @@ class SMCWamV(Node):
         self.declare_parameter('left_thrust_topic', '/wamv/left_thrust')
         self.declare_parameter('right_thrust_topic', '/wamv/right_thrust')
         self.declare_parameter('max_thrust', 200.0)
-        self.declare_parameter('max_thrust_rate', 100.0)   # per second
+        self.declare_parameter('max_thrust_rate', 80.0)   # per second
         self.declare_parameter('invert_left', False)
         self.declare_parameter('invert_right', False)
 
         # Controller defaults (conservative / physically-informed)
-        self.declare_parameter('desired_speed', 1.5)
-        self.declare_parameter('k_speed', 120.0)
-        self.declare_parameter('k_psi', 8.0)
-        self.declare_parameter('k_s', 10.0)
-        self.declare_parameter('epsilon', 0.2)
-        self.declare_parameter('k_moment', 3.0)
+        self.declare_parameter('desired_speed', 0.5)
+        self.declare_parameter('k_speed', 100.0)
+        self.declare_parameter('k_psi', 0.1)
+        self.declare_parameter('k_s', 1.0)
+        self.declare_parameter('epsilon', 1.0)
+        self.declare_parameter('k_moment', 4.0)
         self.declare_parameter('lambda_ct', 1.0)
 
         # Lookahead
-        self.declare_parameter('lookahead_distance', 0.2)
+        self.declare_parameter('lookahead_distance', 5.0)
 
         # Odometry compensation (SDF odom rpy_offset = +pi/2); set 0 to disable
         self.declare_parameter('odom_yaw_compensation', 0.0)  # subtract π/2 by default
@@ -378,12 +378,26 @@ class SMCWamV(Node):
         vy = self.current_y - ty
         cross_track = -math.sin(path_yaw) * vx + math.cos(path_yaw) * vy
 
+
+
+
+
+
+
+
+
+
+
+
+
         # sliding variable
         s = yaw_err + self.lambda_ct * cross_track
 
+
+
         # switching term with boundary layer
         if abs(s) > self.epsilon:
-            switching = self.k_s * sign_sat(s)
+            switching = self.k_s *  math.tanh(s / self.epsilon)
         else:
             switching = self.k_s * (s / self.epsilon)
 
@@ -404,18 +418,18 @@ class SMCWamV(Node):
         M_cmd_limit = 80.0  # N*m (safe-ish in sim)
         
         # clamp r_cmd
-        if r_cmd > r_cmd_limit:
-            r_cmd = r_cmd_limit
-        elif r_cmd < -r_cmd_limit:
-            r_cmd = -r_cmd_limit
-        
-        # recompute M_cmd from (possibly) clamped r_cmd
-        M_cmd = self.k_moment * r_cmd
-        # clamp M_cmd just in case
-        if M_cmd > M_cmd_limit:
-            M_cmd = M_cmd_limit
-        elif M_cmd < -M_cmd_limit:
-            M_cmd = -M_cmd_limit
+        #if r_cmd > r_cmd_limit:
+        #    r_cmd = r_cmd_limit
+        #elif r_cmd < -r_cmd_limit:
+        #    r_cmd = -r_cmd_limit
+        #
+        ## recompute M_cmd from (possibly) clamped r_cmd
+        #M_cmd = self.k_moment * r_cmd
+        ## clamp M_cmd just in case
+        #if M_cmd > M_cmd_limit:
+        #    M_cmd = M_cmd_limit
+        #elif M_cmd < -M_cmd_limit:
+        #    M_cmd = -M_cmd_limit
 
 
 

@@ -190,6 +190,25 @@ def generate_launch_description():
         ),
 #
 
+
+
+
+        #Node(
+        #    package='ros2_maritime',
+        #    executable='st_smc_control',
+        #    name='st_smc_control'
+        #),
+
+
+
+        #Node(
+        #    package='ros2_maritime',
+        #    executable='los_control',
+        #    name='los_control'
+        #),
+
+
+
         Node(
             package='ros2_maritime',
             executable='heading',
@@ -198,11 +217,11 @@ def generate_launch_description():
 
 
 
-        #Node(
-        #    package='ros2_maritime',
-        #    executable='data_logger',
-        #    name='data_logger'
-        #),
+        Node(
+            package='ros2_maritime',
+            executable='csv_rec',
+            name='csv_rec'
+        ),
 
 
 

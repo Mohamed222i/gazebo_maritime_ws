@@ -1,11 +1,13 @@
 [console_scripts]
 altimeter_converter = ros2_maritime.altimeter_converter:main
+csv_rec = ros2_maritime.csv_rec:main
 gps_cov = ros2_maritime.gps_cov:main
 heading = ros2_maritime.heading:main
 imu_covariance = ros2_maritime.imu_covariance:main
+los_control = ros2_maritime.los_control:main
 magnetometer_converter = ros2_maritime.magnetometer_converter:main
 path_publisher = ros2_maritime.path_publisher:main
-path_rec = ros2_maritime.path_rec:main
 random_waypoint = ros2_maritime.random_waypoint:main
 smc_control = ros2_maritime.smc_control:main
+st_smc_control = ros2_maritime.st_smc_control:main
 usv_breadcrumb = ros2_maritime.usv_breadcrumb:main
