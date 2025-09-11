@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 SMC WAM-V Controller (ROS2, Python)
 
@@ -11,7 +10,13 @@ Features:
  - Odometry yaw compensation param (useful because SDF odom plugin applied rpy_offset = +pi/2)
  - Conservative physical defaults derived from your SDF
 
-Default tuned parameters (physically-informed):
+Added in this version (damping):
+ - Linear viscous damping on surge command (k_d_speed)
+ - Rotational viscous damping on yaw moment (k_d_yaw), applied using a filtered yaw-rate
+ - First-order low-pass on measured yaw-rate to avoid noisy derivative feedback (r_filter_tau)
+ - Debug publishers for damping contributions
+
+Default tuned parameters (physically-informed) kept and extended with damping defaults:
  - thruster_separation = 2.05427 m (extracted from SDF)
  - thruster_half d = 1.027135 m
  - mass = 180 kg (for reference)
@@ -26,6 +31,13 @@ Default tuned parameters (physically-informed):
  - k_moment = 5.0
  - lookahead_distance = 4.0 m
  - odom_yaw_compensation = -1.570796 (subtract pi/2 from raw odom yaw)
+ - k_d_speed = 20.0  # linear viscous damping (higher -> stronger suppression of speed oscillations)
+ - k_d_yaw = 60.0    # rotational viscous damping (Nm per rad/s)
+ - r_filter_tau = 0.15 # seconds for yaw-rate low-pass
+
+Notes:
+ - Set k_d_speed or k_d_yaw to 0.0 to disable the corresponding damping.
+ - Tune gradually: increase damping until oscillations reduced, then reduce if response becomes sluggish.
 """
 
 import rclpy
@@ -38,12 +50,11 @@ from visualization_msgs.msg import Marker
 from std_srvs.srv import Empty
 import math
 from typing import List, Tuple
-from std_msgs.msg import Float64
-
 
 
 def wrap_to_pi(a: float) -> float:
     return (a + math.pi) % (2.0 * math.pi) - math.pi
+
 
 def sign_sat(s: float) -> float:
     if s > 0.0:
@@ -52,6 +63,7 @@ def sign_sat(s: float) -> float:
         return -1.0
     else:
         return 0.0
+
 
 class SMCWamV(Node):
     def __init__(self):
@@ -72,25 +84,31 @@ class SMCWamV(Node):
         # Actuation + safety
         self.declare_parameter('left_thrust_topic', '/wamv/left_thrust')
         self.declare_parameter('right_thrust_topic', '/wamv/right_thrust')
-        self.declare_parameter('max_thrust', 200.0)
-        self.declare_parameter('max_thrust_rate', 80.0)   # per second
+        self.declare_parameter('max_thrust', 140.0)
+        self.declare_parameter('max_thrust_rate', 40.0)   # per second
         self.declare_parameter('invert_left', False)
         self.declare_parameter('invert_right', False)
 
         # Controller defaults (conservative / physically-informed)
         self.declare_parameter('desired_speed', 0.5)
-        self.declare_parameter('k_speed', 100.0)
-        self.declare_parameter('k_psi', 0.1)
-        self.declare_parameter('k_s', 1.0)
-        self.declare_parameter('epsilon', 1.0)
-        self.declare_parameter('k_moment', 4.0)
-        self.declare_parameter('lambda_ct', 1.0)
+        self.declare_parameter('k_speed', 80.0)
+        self.declare_parameter('k_psi', 1.0)
+        self.declare_parameter('k_s', 5.0)
+        self.declare_parameter('epsilon', 0.3)
+        self.declare_parameter('k_moment', 2.0)
+        self.declare_parameter('lambda_ct', 2.0)
+
+
+        # Damping (new)
+        self.declare_parameter('k_d_speed', 50.0)   # linear viscous damping (applied to surge)
+        self.declare_parameter('k_d_yaw', 20.0)     # rotational viscous damping (applied as torque)
+        self.declare_parameter('r_filter_tau', 0.2) # low-pass time constant (s) for yaw-rate
 
         # Lookahead
-        self.declare_parameter('lookahead_distance', 5.0)
+        self.declare_parameter('lookahead_distance', 0.4)
 
         # Odometry compensation (SDF odom rpy_offset = +pi/2); set 0 to disable
-        self.declare_parameter('odom_yaw_compensation', 0.0)  # subtract π/2 by default
+        self.declare_parameter('odom_yaw_compensation', 3.14)  # subtract π/2 by default
 
         # Executed path publishing
         self.declare_parameter('executed_path_topic', '/viz/actual_path')
@@ -126,6 +144,11 @@ class SMCWamV(Node):
         self.k_moment = float(self.get_parameter('k_moment').get_parameter_value().double_value)
         self.lambda_ct = float(self.get_parameter('lambda_ct').get_parameter_value().double_value)
 
+        # damping params
+        self.k_d_speed = float(self.get_parameter('k_d_speed').get_parameter_value().double_value)
+        self.k_d_yaw = float(self.get_parameter('k_d_yaw').get_parameter_value().double_value)
+        self.r_filter_tau = float(self.get_parameter('r_filter_tau').get_parameter_value().double_value)
+
         self.lookahead_distance = float(self.get_parameter('lookahead_distance').get_parameter_value().double_value)
         self.odom_yaw_compensation = float(self.get_parameter('odom_yaw_compensation').get_parameter_value().double_value)
 
@@ -143,6 +166,8 @@ class SMCWamV(Node):
         self.current_y = 0.0
         self.current_yaw = 0.0
         self.current_u = 0.0
+        self.current_r = 0.0  # raw yaw-rate from odom
+        self.filtered_r = 0.0 # low-pass filtered yaw-rate used for damping
         self.odom_received = False
 
         # executed path buffer
@@ -175,7 +200,7 @@ class SMCWamV(Node):
         self.control_timer = self.create_timer(1.0 / self.rate_hz, self.control_loop)
         self.exec_pub_timer = self.create_timer(1.0 / self.executed_path_publish_rate, self.publish_executed_path)
 
-        self.get_logger().info('SMC WAM-V controller started (physically-informed defaults loaded).')
+        self.get_logger().info('SMC WAM-V controller started (physically-informed defaults loaded). Damping enabled.')
 
 
 
@@ -194,11 +219,10 @@ class SMCWamV(Node):
         self.pub_offtrack = self.create_publisher(Float64, '/smc/debug/offtrack', 10)
         self.pub_lookahead = self.create_publisher(Float64, '/smc/debug/lookahead', 10)
         self.pub_epsilon = self.create_publisher(Float64, '/smc/debug/eps', 10)
-        
-
-
-
-
+        # damping debug pubs
+        self.pub_damping_F = self.create_publisher(Float64, '/smc/debug/damping_F', 10)
+        self.pub_damping_M = self.create_publisher(Float64, '/smc/debug/damping_M', 10)
+        self.pub_r_filtered = self.create_publisher(Float64, '/smc/debug/r_filtered', 10)
 
 
     # ---------------- callbacks ----------------
@@ -226,6 +250,8 @@ class SMCWamV(Node):
         self.current_yaw = wrap_to_pi(raw_yaw + self.odom_yaw_compensation)
         # linear speed (forward in body frame)
         self.current_u = msg.twist.twist.linear.x
+        # raw yaw-rate from odometry (body z)
+        self.current_r = msg.twist.twist.angular.z
         self.odom_received = True
 
         # record executed path (PoseStamped)
@@ -378,22 +404,8 @@ class SMCWamV(Node):
         vy = self.current_y - ty
         cross_track = -math.sin(path_yaw) * vx + math.cos(path_yaw) * vy
 
-
-
-
-
-
-
-
-
-
-
-
-
         # sliding variable
         s = yaw_err + self.lambda_ct * cross_track
-
-
 
         # switching term with boundary layer
         if abs(s) > self.epsilon:
@@ -406,16 +418,29 @@ class SMCWamV(Node):
 
         # surge: simple P controller mapping speed error to thrust (units of node's thrust command)
         speed_err = self.desired_speed - self.current_u
-        F_total = self.k_speed * speed_err
+
+        # linear viscous damping term: -k_d_speed * u
+        damping_F = self.k_d_speed * self.current_u
+
+        F_total = self.k_speed * speed_err - damping_F
+
+        # update filtered yaw-rate (first-order LPF) using DT from last loop
+        now = self.get_clock().now().nanoseconds * 1e-9
+        dt = max(1e-6, now - self.last_time)
+        alpha = dt / (self.r_filter_tau + dt)
+        # filtered_r tracks the measured current_r
+        self.filtered_r += alpha * (self.current_r - self.filtered_r)
 
         # yaw moment command
-        M_cmd = self.k_moment * r_cmd
-
-
+        # damping torque = -k_d_yaw * filtered_r
+        damping_M = self.k_d_yaw * self.filtered_r
+        M_cmd = self.k_moment * r_cmd - damping_M
 
         # safety limits (insert after r_cmd and M_cmd computed)
         r_cmd_limit = 2.0   # rad/s (safe)
         M_cmd_limit = 80.0  # N*m (safe-ish in sim)
+
+
         
         # clamp r_cmd
         #if r_cmd > r_cmd_limit:
@@ -430,6 +455,7 @@ class SMCWamV(Node):
         #    M_cmd = M_cmd_limit
         #elif M_cmd < -M_cmd_limit:
         #    M_cmd = -M_cmd_limit
+
 
 
 
@@ -452,8 +478,6 @@ class SMCWamV(Node):
         right_cmd = max(-self.max_thrust, min(self.max_thrust, right_cmd))
 
         # rate limit thrusters
-        now = self.get_clock().now().nanoseconds * 1e-9
-        dt = max(1e-6, now - self.last_time)
         max_delta = self.max_thrust_rate * dt
         left_cmd = self.last_left_cmd + max(-max_delta, min(max_delta, left_cmd - self.last_left_cmd))
         right_cmd = self.last_right_cmd + max(-max_delta, min(max_delta, right_cmd - self.last_right_cmd))
@@ -501,8 +525,6 @@ class SMCWamV(Node):
         # (optional) light debug logging
         self.get_logger().debug(f"s={s:.3f}, yaw_err={yaw_err:.3f}, ct={cross_track:.3f}, F={F_total:.1f}, M={M_cmd:.1f}, L={left_cmd:.1f}, R={right_cmd:.1f}")
 
-
-
         # Publish debug floats for plotting
         msg = Float64()
         msg.data = float(s); self.pub_s.publish(msg)
@@ -521,7 +543,10 @@ class SMCWamV(Node):
         msg.data = float(self.lookahead_distance); self.pub_lookahead.publish(msg)
         msg.data = float(self.epsilon); self.pub_epsilon.publish(msg)
 
-
+        # damping debug
+        msg.data = float(damping_F); self.pub_damping_F.publish(msg)
+        msg.data = float(damping_M); self.pub_damping_M.publish(msg)
+        msg.data = float(self.filtered_r); self.pub_r_filtered.publish(msg)
 
 
 
@@ -535,6 +560,7 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()

@@ -17,8 +17,10 @@ class PathPublisher(Node):
         # Define waypoints (e.g., for a dam survey lawnmower pattern)
         self.waypoints = np.array([
             (0.0, 0.0),
+            (10.0, 10.0),
             (20.0, 20.0),
             (40.0, 30.0),
+            (70.0, 30.0),
             (70.0, 40.0),
             (90.0, 50.0)
 
